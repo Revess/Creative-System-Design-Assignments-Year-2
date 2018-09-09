@@ -1,0 +1,9 @@
+Git diff: Toont het verschil aan tussen de commits.
+Git fetch: Download objecten en referenties van een andere repository.
+Git pull: Haalt de info op van de GitHub server en merged ze met jouw workspace.
+Git log: Haalt de laatst toegevoegde log data op van de GitHub Server.
+Git push: Zet nieuwe bestanden online op de server.
+
+1. Het is snel en makkelijk berijkbaar.
+2. Opensource.
+3. Gratis.
