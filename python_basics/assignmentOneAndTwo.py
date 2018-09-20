@@ -43,10 +43,18 @@ def beatToMS(val, tempo):
         print("This is not a rhythmic value: " + str(val))
         main()
 
+def filtering(lst):
+    for i in lst:
+        if i == "|":
+            lst.remove('|')
+    return lst
+
 #Setup the conversionstructure to convert the list.
 def convertList(lst, tempo):
 #---Convert the input string to a list
     str_lst = lst.split()
+#---Filter out the dashes
+    str_lst = filtering(str_lst)
 #---Convert the list types to floats
     float_lst = [float(i) for i in str_lst]
 #---seconds per beat
