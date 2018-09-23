@@ -31,7 +31,7 @@ def play():
         for i in ms_lst:
             playFile()
             time.sleep(i)
-            x += 1
+        x += 1
     if x >= numOfPlays:
         print("Sequence completed")
         return
@@ -50,6 +50,7 @@ while running:
 #---Help
     elif state == 'help':
         print("The following commands can be used: \ncurrentFile   play \nexit()        rhythm \ngetFile       tempo \nhelp          testFile \nnumOfPlays    testSequencer")
+        state = 'main'
 
 ####Commands####
 ##----currentFile----##
@@ -123,4 +124,3 @@ while running:
     else:
         print("Unkown command, to see the full list of commands use help")
         state = 'main'
-    
