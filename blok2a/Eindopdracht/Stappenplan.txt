@@ -1,0 +1,6 @@
+Benodigheden:
+-Een functie die onregelmatige maatsoortenbijhoud
+-Een functie die een beat genereerd
+-Bpm vragen en file aan user
+-Een functie die het ritme op kan slaan
+-Een functie die het rimte om kan zetten naar Midi
