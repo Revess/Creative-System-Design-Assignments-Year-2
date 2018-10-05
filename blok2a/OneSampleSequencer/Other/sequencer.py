@@ -4,7 +4,7 @@ import time
 import random
 
 ##--Objects--##
-samples = [sa.WaveObject.from_wave_file("../audioFiles/CowBell.wav")]
+samples = [sa.WaveObject.from_wave_file("./audioFiles/CowBell.wav")]
 bpm = 120
 tempo = 60 / bpm
 keepPlaying = True

@@ -4,7 +4,7 @@ import time
 import random
 
 ##--Objects--##
-samples = [sa.WaveObject.from_wave_file("../audioFiles/CowBell.wav"),sa.WaveObject.from_wave_file("../audioFiles/snare.wav"),sa.WaveObject.from_wave_file("../audioFiles/SecretKick.wav"),sa.WaveObject.from_wave_file("../audioFiles/RoninKick.wav"),sa.WaveObject.from_wave_file("../audioFiles/PrydaSnare.wav"),sa.WaveObject.from_wave_file("../audioFiles/Hard.wav")]
+samples = [sa.WaveObject.from_wave_file("./audioFiles/CowBell.wav"),sa.WaveObject.from_wave_file("./audioFiles/snare.wav"),sa.WaveObject.from_wave_file("./audioFiles/SecretKick.wav"),sa.WaveObject.from_wave_file("./audioFiles/RoninKick.wav"),sa.WaveObject.from_wave_file("./audioFiles/PrydaSnare.wav"),sa.WaveObject.from_wave_file("./audioFiles/Hard.wav")]
 bpm = 120
 hard = 5
 tempo = 60 / bpm

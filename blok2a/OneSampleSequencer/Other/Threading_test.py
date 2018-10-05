@@ -25,7 +25,7 @@ playerState = 'pause'
 #The time of starting the code
 startTime = time.time()
 #Object file_path
-samples = [sa.WaveObject.from_wave_file("../audioFiles/CowBell.wav")]
+samples = [sa.WaveObject.from_wave_file("./audioFiles/CowBell.wav")]
 #When started will it keep playing?
 keepPlaying = True
 

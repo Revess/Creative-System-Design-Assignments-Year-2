@@ -2,13 +2,10 @@
 import simpleaudio as sa
 import time
 import random
-import threading
-from threading import Thread
 
 ##--Objects--##
-samples = [sa.WaveObject.from_wave_file("../audioFiles/CowBell.wav"),sa.WaveObject.from_wave_file("../audioFiles/snare.wav"),sa.WaveObject.from_wave_file("../audioFiles/SecretKick.wav"),sa.WaveObject.from_wave_file("../audioFiles/RoninKick.wav"),sa.WaveObject.from_wave_file("../audioFiles/PrydaSnare.wav"),sa.WaveObject.from_wave_file("../audioFiles/Hard.wav")]
+samples = [sa.WaveObject.from_wave_file("./audioFiles/CowBell.wav")]
 bpm = 120
-hard = 5
 tempo = 60 / bpm
 keepPlaying = True
 firstRun = True
@@ -35,44 +32,46 @@ def convertToMs(string):
 
 #Convert a rhythm list to a timestamp list
 def convertToStamps(lst):
-    global run, plays
+    global run
     stamps = []
     ms_lst = lst
     p = 0
     x = 0
-    stamps.insert(0,0)
-    while plays > 0:
-        for f in ms_lst:                            #Convert the milisecond list to a timestamp list by adding them together in seperate spaces
-            x += f
+    for i in ms_lst:                            #Convert the milisecond list to a timestamp list by adding them together in seperate spaces
+        if i == 0:
+            stamps.append(i)
+            p += 1
+        else:
+            x += i
             stamps.append(x)
             p += 1
-        plays -= 1
-        shuffle_lst(ms_lst)
-    stamps.pop()
-    return stamps
+    if run == True:
+        stamps.pop()
+        stamps.insert(0,0)
+        print(stamps)
+        run = False
+        return stamps
+    else:
+        return stamps
 
 #Play the given list
 def player(lst):
     global keepPlaying, plays, timestamps, rhythm
     keepPlaying = True                          #Keeps the loop going until done
-    startTime = time.time()             #Updates the start time every new loop
-    x = 1
-    length = len(lst)
-    lngth = len(samples)
-    for ts in lst:                       #Walks us through the timestamps list
-        while True:
-            currentTime = time.time()   #Update the current time for the coming equation
-            if(currentTime - startTime >= ts):
-                if x == length:
-                    playObject = samples[hard].play()
-                    playObject.wait_done()
-                    x += 1
-                    break
-                else:
-                    rnd = round(((lngth-1)*random.random()))
-                    samples[rnd].play()       #Play the given sample out of the file
-                    x += 1
-                    break
+    while keepPlaying:
+        if plays > 0:                           #Checks if the loop has to stop
+            startTime = time.time()             #Updates the start time every new loop
+            for i in lst:                       #Walks us through the timestamps list
+                while True:
+                    currentTime = time.time()   #Update the current time for the coming equation
+                    if(currentTime - startTime >= i):
+                        samples[0].play()       #Play the given sample out of the file
+                        break
+            plays -= 1                          #Substract one from the asked loops
+            print(timestamps)
+            timestamps = shuffle_lst(rhythm)
+        elif plays <= 0:                        #if previous statement doesn't go in effect this one will stop the loop
+            keepPlaying = False
     print("Done playing")
 
 def shuffle_lst(lst):
@@ -87,7 +86,7 @@ def shuffle_lst(lst):
     lst.reverse()
     lst.insert(rnd, val)
     lst.insert(rnd2, val2)
-    return lst
+    return convertToStamps(lst)
 
 ##--Main--##
 def main():
@@ -95,11 +94,7 @@ def main():
     bpm = float(input("What bpm would you like to use? \n>>> "))
     tempo = 60 / bpm
     rhythm = convertToMs(input("What rhythm would you like to play? \n>>> "))
-    plays = int(input("How many times would you like the rhythm to be played? \n>>> "))
     timestamps = convertToStamps(rhythm)
+    plays = int(input("How many times would you like the rhythm to be played? \n>>> "))
     player(timestamps)
 main()
-
-if __name__ == '__main__':
-    Thread(target = main).start()
-    Thread(target = player).start()
