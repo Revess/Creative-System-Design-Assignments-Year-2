@@ -1,6 +1,16 @@
-Benodigheden:
--Een functie die onregelmatige maatsoortenbijhoud
--Een functie die een beat genereerd
--Bpm vragen en file aan user
--Een functie die het ritme op kan slaan
--Een functie die het rimte om kan zetten naar Midi
+Structuur van code:
+1. Imports:
+    Simpleaudio
+    Time
+2. Objecten:
+    Sample array die de samples vasthoudt
+    Lengte van de beat, ookwel hoevaak een maat creëren 
+    Bpm
+    Het bpm in seconden
+    Een lijst met de bekende noot lengten (kwart,achsten etc.)
+3. Functies:
+    Een functie om een ritme in een maatsoort te generen
+    Een functie om deze ritmes te husselen naar behoeve van de gebruiker
+    Een functie om deze ritmes af te spelen
+    Een functie om deze ritmes om te zetten naar MIDI
+    Een functie die het main() programma houdt en luisterd naar de input van de user
