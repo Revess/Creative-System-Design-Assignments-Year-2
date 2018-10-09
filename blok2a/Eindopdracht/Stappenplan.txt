@@ -9,8 +9,49 @@ Structuur van code:
     Het bpm in seconden
     Een lijst met de bekende noot lengten (kwart,achsten etc.)
 3. Functies:
-    Een functie om een ritme in een maatsoort te generen
+    Een functie om een ritme in een maatsoort te generen:
+        -Dit ritme wordt gegenereerd aan de hand van een bepaalde weging van de noten (4 = 20%, 8 = 40% etc.)
+        -Eerst wordt laag berekent die minder kans heeft om voor te komen, vervolgens midden die meer kans heeft dan laag
+     maar minder vaak dan de hoog. Hoog vult alle tussen noten op met een bepaalde hoeveelheid, die ook weer van kansen afhangt 
     Een functie om deze ritmes te husselen naar behoeve van de gebruiker
     Een functie om deze ritmes af te spelen
     Een functie om deze ritmes om te zetten naar MIDI
     Een functie die het main() programma houdt en luisterd naar de input van de user
+
+Stappenplan:
+1. Schrijf de code voor de main, bevattende: (13 okt)
+    -Input van user die de juiste variabelen update
+    -Er wordt gevraagd naar:
+        -Bpm
+        -Aantal keer herhalen
+        -Welke maatsoort
+    -Schrijf vervolgens de volgende functies aan:
+        -Rhythm generator (nr.2),
+        -Player (nr. 5), gebeurt pas na voorgaande functie
+    -Vraag of het ritme moet worden opgeslagen:
+        -MIDI converter (nr. 6)
+2. Schrijf een functie om een ritme te generen:
+    -Moet in een maatsoort passen, dus moet optellen tot de maat vol is
+    -Deze lijst wordt in een aparte functie omgezet naar timestamps (nr.4)
+    -Functies om aan te roepen:
+        -Shuffler
+        -Converter
+3. Schrijf de shuffler:
+    -Neemt de eerste en laatste waarde uit de lijst, gebruik hiervoor reverse()
+    -Plaats deze weer terug in de lijst op een willekeurige plek
+    -Bereken de timestamps opnieuw
+4. Schrijf een lijst converter:
+    -Van string naar lijst 
+    -Van conversie die de lijst in beat waardes (4,8,16 etc.) naar miliseconden omzet
+    -Het omzetten van miliseconden naar timestamp waarden waarbij de offset is berekent om op 0 te beginnen
+5. Schrijf code voor de sample player, bevattende:
+    -Afspeel functie
+    -Een loop die check of er gespeeld moet worden
+    -Een for loop die de juiste items uit de lijst pakt
+    -Een if statement die de tijd checkt
+    -Een variabel die de current time update
+    -Een variabel die de start tijd onthoudt
+6. Schrijf een functie om het ritme om te zetten naar midi: (14 okt)
+    -Zoek uit hoe dit werkt
+
+7. Debuggen, nadat dit allemaal is gemaakt ga beta testen en debuggen (15 okt)
