@@ -6,15 +6,36 @@ tempo = 60 / bpm
 timestamps = [0]
 rhythm = []
 rhythm_obj_lst = [1,2,4,8,16]
+rhythmKick = []
+rhythmSnare = []
+rhythmHat = []
 timestampKick = []
 timestampSnare = []
 timestampHat = []
-plays = 5
+plays = 1
 measure = ['7','4']
 command = 'generate'
 percentages = [100,[50,50],[10,60,30],[10,15,50,25],[7.5,12.5,20,40,20]]
 
+def convertToStamps(lst):
+    global plays
+    count = plays
+    stamps = []
+    ms_lst = lst
+    offset = ms_lst.pop()
+    x = 0 + offset                                  #The old timestamp value is x
+    stamps.insert(0,x)                              #Make the starting sample start on timestamp 0
+    while count > 0:                                #If we still didn't get to the end of the requested amount of loops repeat
+        for f in ms_lst:                            #For every floatingpoint number in the milisecond list
+            x += f                                  #Add the current floatingpoint to the previous one, the new timestamp is created
+            stamps.append(x)                        #Add this timestamp to the list
+        count -= 1                                  #One loop is compleated substract one
+        shuffleLst(ms_lst)                          #Mix the old rhythm playlist so we can generate more random lists (See the function for explanation)
+    stamps.pop()                                    #Remove the last stamp to so the offset we created at the start (insert a 0) works right
+    return stamps
+
 def shuffleLst(lst):                                #Will shuffle a given list
+    offset = lst.pop()
     length = len(lst)
     rnd = round((length*random.random()))           #Generate two random values according to the length of the list
     rnd2 = round((length*random.random()))
@@ -26,6 +47,7 @@ def shuffleLst(lst):                                #Will shuffle a given list
     lst.reverse()
     lst.insert(rnd, val)                            #Insert both items on a random spot in the list
     lst.insert(rnd2, val2)
+    lst.append(offset)
     return lst
 
 def lowGen(count,val,lst):
@@ -210,15 +232,21 @@ def highGen(count,val,lst):
     return lst
 
 def beatGen(count, val):
-    global timestampKick, timestampSnare, timestampHat, command
+    global timestampKick, timestampSnare, timestampHat, rhythmKick, rhythmSnare, rhythmHat, command
     beatCount = int(count)
     oneBeatVal = int(val)
     #While True: Enable when implementing Threading
     if command == 'generate':
-        lowGen(beatCount,oneBeatVal,timestampKick)
-        midGen(beatCount,oneBeatVal,timestampSnare)
-        highGen(beatCount,oneBeatVal,timestampHat)
+        lowGen(beatCount,oneBeatVal,rhythmKick)
+        midGen(beatCount,oneBeatVal,rhythmSnare)
+        highGen(beatCount,oneBeatVal,rhythmHat)
+        timestampKick = convertToStamps(rhythmKick)
+        timestampSnare = convertToStamps(rhythmSnare)
+        timestampHat = convertToStamps(rhythmHat)
     else:
         time.sleep(0.001)
+    print(timestampKick)
+    print(timestampSnare)
+    print(timestampHat)
 
 beatGen(measure[0],measure[1])
