@@ -9,10 +9,14 @@ bpm = 120
 tempo = 60 / bpm
 timestamps = [0]
 rhythm = []
-rhythm_obj_lst = [1, 2, 4 ,8 ,16]
-timestamps = []
+rhythm_obj_lst = [1,2,4,8,16]
+timestampKick = []
+timestampSnare = []
+timestampHat = []
 plays = 0
 measure = ['4', '4']
+command = ''
+percentages = [100,[50,50],[10,60,30],[10,15,50,25],[7.5,12.5,20,40,20]]
 
 ##--Functions--##
 def isFloat(x):
@@ -73,16 +77,216 @@ def shuffleLst(lst):                                #Will shuffle a given list
     lst.insert(rnd2, val2)
     return lst
 
-def beatGen():
-    #Need to create precentages for the kick snare and hi-hat and 
-    return
+def lowGen(count,val,lst):
+    global percentages,tempo
+    count = count*(tempo/(val/val))
+    pos = 0
+    offset = 100*random.random()
+    while count > pos:
+        rnd = 100*random.random()
+        if val == 1:
+            lst.append(1)
+        elif val == 2:
+            if rnd <= percentages[1][0]:
+                lst.append(1)
+            elif rnd > percentages[1][1]:
+                lst.append(2)
+        elif val == 4:
+            if rnd <= percentages[2][0]:
+                lst.append(1)
+            elif rnd > percentages[2][0] and rnd <= percentages[2][0]+percentages[2][1]:
+                lst.append(2)
+            elif rnd > percentages[2][0]+percentages[2][1]:
+                lst.append(4)
+        elif val == 8:
+            if rnd <= percentages[3][0]:
+                lst.append(1)
+            elif rnd > percentages[3][0] and rnd <= percentages[3][0]+percentages[3][1]:
+                lst.append(2)
+            elif rnd > percentages[3][0]+percentages[3][1] and rnd <= percentages[3][0]+percentages[3][1]+percentages[3][2]:
+                lst.append(4)
+            elif rnd > percentages[3][0]+percentages[3][1]+percentages[3][2]:
+                lst.append(8)
+        elif val == 16:
+            if rnd <= percentages[4][0]:
+                lst.append(1)
+            elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
+                lst.append(2)
+            elif rnd > percentages[4][0]+percentages[4][1] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]:
+                lst.append(4)
+            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
+                lst.append(8)
+            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
+                lst.append(16)
+        lst.reverse()
+        lst[0]/=val 
+        lst[0]=tempo/lst[0]
+        pos += lst[0]
+        lst.reverse()
+    if pos > count:
+        dif = 0
+        print(offset)
+        if offset <= 10:
+            offset = (tempo/(val/val))/2
+            dif = (pos - count)+offset
+        else:
+            dif = (pos - count)
+            offset = 0
+        lst.reverse()
+        lst[0]-=dif
+        if lst[0] < 0:
+            print(lst)
+            lst[1]+=lst[0]
+            lst.remove(lst[0])
+        lst.reverse()
+        lst.append(offset)
+    return lst
+# l = []
+# print("low",lowGen(4,4,l))
+
+def midGen(count,val,lst):
+    global percentages,tempo
+    count = count*(tempo/(val/val))
+    pos = 0
+    offset = 100*random.random()
+    while count > pos:
+        rnd = 100*random.random()
+        if val == 1:
+            if rnd <= percentages[1][0]:
+                lst.append(1)
+            elif rnd > percentages[1][1]:
+                lst.append(2)
+        elif val == 2:
+            if rnd <= percentages[2][0]:
+                lst.append(1)
+            elif rnd > percentages[2][0] and rnd <= percentages[2][0]+percentages[2][1]:
+                lst.append(2)
+            elif rnd > percentages[2][0]+percentages[2][1]:
+                lst.append(4)
+        elif val == 4:
+            if rnd <= percentages[3][0]:
+                lst.append(1)
+            elif rnd > percentages[3][0] and rnd <= percentages[3][0]+percentages[3][1]:
+                lst.append(2)
+            elif rnd > percentages[3][0]+percentages[3][1] and rnd <= percentages[3][0]+percentages[3][1]+percentages[3][2]:
+                lst.append(4)
+            elif rnd > percentages[3][0]+percentages[3][1]+percentages[3][2]:
+                lst.append(8)
+        elif val == 8:
+            if rnd <= percentages[4][0]:
+                lst.append(1)
+            elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
+                lst.append(2)
+            elif rnd > percentages[4][0]+percentages[4][1] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]:
+                lst.append(4)
+            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
+                lst.append(8)
+            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
+                lst.append(16)        
+        elif val == 16:
+            if rnd <= percentages[4][0]:
+                lst.append(1)
+            elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
+                lst.append(2)
+            elif rnd > percentages[4][0]+percentages[4][1] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]:
+                lst.append(4)
+            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
+                lst.append(8)
+            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
+                lst.append(16)
+        lst.reverse()
+        lst[0]/=val 
+        lst[0]=tempo/lst[0]
+        pos += lst[0]
+        lst.reverse()
+    if pos > count:
+        dif = 0
+        print(offset)
+        if offset <= 80:
+            offset = tempo/(val/val)
+            dif = (pos - count)+offset
+        else:
+            dif = (pos - count)
+            offset = 0
+        lst.reverse()
+        lst[0]-=dif
+        if lst[0] < 0:
+            print(lst)
+            lst[1]+=lst[0]
+            lst.remove(lst[0])
+        lst.reverse()
+        lst.append(offset)
+    return lst
+# m = []
+# print("mid",midGen(4,4,m))
+
+def highGen(count,val,lst):
+    global percentages,tempo
+    count = count*(tempo/(val/val))
+    pos = 0
+    offset = 100*random.random()
+    while count > pos:
+        rnd = 100*random.random()
+        if rnd <= percentages[4][0]:
+            lst.append(1)
+        elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
+            lst.append(2)
+        elif rnd > percentages[4][0]+percentages[4][1] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]:
+            lst.append(4)
+        elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
+            lst.append(8)
+        elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
+            lst.append(16)
+        lst.reverse()
+        lst[0]/=val 
+        lst[0]=tempo/lst[0]
+        pos += lst[0]
+        lst.reverse()
+    if pos > count:
+        dif = 0
+        print(offset)
+        if offset <= 15:
+            offset = (tempo/(val/val))/2
+            dif = (pos - count)+offset
+        else:
+            dif = (pos - count)
+            offset = 0
+        lst.reverse()
+        lst[0]-=dif
+        if lst[0] < 0:
+            print(lst)
+            lst[1]+=lst[0]
+            lst.remove(lst[0])
+        lst.reverse()
+        lst.append(offset)
+    return lst
+# h = []
+# print(highGen(4,4,h))
+
+# def beatGen(count, val):
+#     global timestampKick, timestampSnare, timestampHat, command, measure, plays
+#     loopCount = plays
+#     beatCount = measure[0]
+#     oneBeatVal = measure[1]
+#     #While True: Enable when implementing Threading
+#     if command == 'generate':
+#         while True:
+#             if command == 'stop':
+#                 break
+#             lowGen(beatCount,oneBeatVal,timestampKick)
+#             midGen(beatCount,oneBeatVal,timestampSnare)
+#             highGen(beatCount,oneBeatVal,timestampHat)
+#     else:
+#         time.sleep(0.001)
+
+#     return
 
 def convertToMidi():
     return
 
 ##--Main--##
 def main():
-    global bpm, plays, rhythm_obj_lst, measure
+    global bpm, plays, rhythm_obj_lst, measure, command
     state = ['main']
     length = 0
     print("Welcome to the irregular beat generator. Type help to display all the available commands")
@@ -154,9 +358,7 @@ def main():
         elif state[0] == 'bpm':                     #If the command of the user is "bpm" it can set the bpm
             succes = False
             while True:
-                if state[0] == 'back':
-                    break
-                elif length == 1:
+                if length == 1:
                     while True:
                         state = [input('What BPM would you like to use? \n>>> ').lower()]
                         state = state[0].split()
@@ -184,8 +386,12 @@ def main():
                         bpm = state[1]
                         succes = True
                 if not succes:
-                    print('Invalid argument for command: "bpm')
-                    break
+                    if state[0] == 'back':
+                        print('You returned to the main menu')
+                        break
+                    else:
+                        print('Invalid argument for command: "bpm"')
+                        break
                 else:
                     print('The bpm has been succesfully set to: ' + str(bpm))
                     break
@@ -230,8 +436,6 @@ def main():
                                 break
                             else:
                                 print('Invalid argment')
-                elif state[0] == 'back':
-                    break
                 if not succes:
                     if not state[0] == 'back':
                         if length == 3:
@@ -245,6 +449,7 @@ def main():
                             print('Invalid argument for command: "loop"')
                             break
                     else:
+                        print('You returned to the main menu')
                         break
                 else:
                     print('The number of loops has been set to: ' + str(plays))
@@ -303,22 +508,27 @@ def main():
                                 break
                             else:
                                 break
-                elif state[0] == 'back':
-                    break
                 if not succes:
                     if not state[0] == 'back': 
                             print('Invalid argument for command: "measure"')
                             break
                     else:
+                        print('You returned to the main menu')
                         break
                 else:
                     print('The measure has been set to: ' + str(measure[0]) + "/" + str(measure[1]))
                     break
-            state = ['main']
+            state = ['main']        
+        elif state[0] == 'generate':
+            command = 'generage'
+            if state[1] == 'stop':
+                command = 'stop'
         else:                                       #If the command is unkown
             print('Unkown command, type "help" to see the full list of commands')
             state = ['main']
 main()
+
+
 
 ##Helpfile: None of the arguments or the commands are case sensitive. 
 # If only command is typen the user will be asked for arguments
