@@ -360,8 +360,8 @@ def main():
             length = len(state)
         elif state[0] == 'help':                    #If the command of the user is "help" it can view the help file
             if length == 1:
-                print('To view the options of each command type: "Help [command]". \nThe commands are not case sensitive.')
-                print('These are the commands you can use: \nbpm       help \nloop      measure \nview ')
+                print('To view the options of each command type: "Help + [command]". \nThe commands are not case sensitive.')
+                print('These are the commands you can use: \nbpm        exit/exit() \ngenerate   loop \nmeasure    play \nstop       view')
             elif length == 2:
                 if state[1] == 'bpm':
                     print('With bpm you can set the bpm for the generated rhythm')
@@ -380,223 +380,100 @@ def main():
             state = ['main']
         elif state[0] == 'view':                    #If the command of the user is "view" it can view one of the memory states, still need to fix this
             succes = False
-            while True:
-                if length == 1:
-                    while True:
-                        state = [input('Which variable would you like to view? \n>>> ').lower()]
-                        state = state[0].split()
-                        statelength = len(state) 
-                        if state[0] == 'bpm':
-                            print('The current bpm has been set to: ' + str(bpm))
-                            succes = True
-                            break
-                        elif state[0] == 'loop':
-                            print('The current amount of loops has been set to: ' + str(plays))
-                            succes = True
-                            break
-                        elif state[0] == 'measure':
-                            print('The current measure has been set to: ' + str(measure[0]) + "/" + str(measure[1]))
-                            succes = True
-                            break
-                        else:
-                            print('Invalid argument')
-                elif length == 2:
-                    if state[1] == 'bpm':
-                        print('The current bpm has been set to: ' + str(bpm))
-                        succes = True
-                        break
-                    elif state[1] == 'loop':
-                        print('The current amount of loops has been set to: ' + str(plays))
-                        succes = True
-                        break
-                    elif state[1] == 'measure':
-                        print('The current measure has been set to: ' + str(measure[0]) + "/" + str(measure[1]))
-                        succes = True
-                        break
-                if not succes:
-                    print('Invalid argument for command: "view"')
-                    break
-                else:
-                    break
+            if length == 1:
+                print('Missing argument')
+                print('The command "view" accepts the following arguments: \n-bpm \n-measure \n-loop')
+                succes = True
+            elif length == 2:
+                if state[1] == 'bpm':
+                    print('The current bpm has been set to: ' + str(bpm))
+                    succes = True
+                elif state[1] == 'loop':
+                    print('The current amount of loops has been set to: ' + str(plays))
+                    succes = True
+                elif state[1] == 'measure':
+                    print('The current measure has been set to: ' + str(measure[0]) + "/" + str(measure[1]))
+                    succes = True
+            if not succes:
+                print('Invalid argument for command: "view"')
+                print('The command "view" accepts the following arguments: \n-bpm \n-measure \n-loop')
             state = ['main']
         elif state[0] == 'bpm':                     #If the command of the user is "bpm" it can set the bpm
             succes = False
-            while True:
-                if length == 1:
-                    while True:
-                        state = [input('What BPM would you like to use? \n>>> ').lower()]
-                        state = state[0].split()
-                        statelength = len(state)
-                        if state[0] == 'back':
-                            break
-                        elif statelength > 1:
-                            print("Too many arguments given")
-                        elif statelength < 1:
-                            print("Not enough arguments given")
-                        elif not state[0].isdigit:
-                            print('Invalid argument')
-                        elif isFloat(state[0]):
-                            print('BPM does not accept floats')
-                        elif int(state[0]) > 0 and int(state[0]) < 999:
-                            bpm = int(state[0])
-                            tempo = 60/bpm
-                            succes = True
-                            break
-                elif length == 2:
-                    if not state[1].isdigit:
-                        print('Invalid argument')
-                    elif isFloat(state[1]):
-                        print('BPM does not accept floats')
-                    elif int(state[1]) > 0 and int(state[1]) < 999:
-                        bpm = int(state[1])
-                        tempo = 60/bpm
-                        succes = True
-                if not succes:
-                    if state[0] == 'back':
-                        print('You returned to the main menu')
-                        break
-                    else:
-                        print('Invalid argument for command: "bpm"')
-                        break
-                else:
-                    print('The bpm has been succesfully set to: ' + str(bpm))
-                    break
+            if length == 1:
+                print('Missing argument')
+                print('Give bpm in whole numbers')
+            elif length == 2:
+                if isFloat(state[1]):
+                    pass
+                elif int(state[1]) > 0 and int(state[1]) < 999:
+                    bpm = int(state[1])
+                    tempo = 60/bpm
+                    succes = True
+            if not succes:
+                if not length == 1:
+                    print('Invalid argument for command: "bpm"')     
+                    print('Give bpm in whole numbers')               
+            else:
+                print('The bpm has been succesfully set to: ' + str(bpm))
             state = ['main']
         elif state[0] == 'loop':                    #If the state of the command is "loop" it can set the number of loops
             succes = False
-            while True:
-                if length == 1:
-                    while True:
-                        state = [input('How many bars should the rhythm be? \n>>> '.lower())]
-                        state = state[0].split()
-                        statelength = len(state)
-                        if state[0] == 'back':
-                            break
-                        elif statelength > 1:
-                            print("Too many arguments given")
-                        elif statelength < 1:
-                            print("Not enough arguments given")
-                        elif not state[0].isdigit():
-                            print('Invalid argument')
-                        elif isFloat(state[0]):
-                            print("Loop does not accept floats")
-                        elif int(state[0]) > 0 and int(state[0]) < 20:
-                            plays = int(state[0])
-                            succes = True
-                            break
-                        else:
-                            print('Invalid argument')
-                elif length == 2:
-                    if state[1] == 'length':
-                        while True:
-                            state = [input('How many bars should the rhythm be? \n>>> '.lower())]
-                            if state[0] == 'back':
-                                break
-                            elif not state[0].isdigit():
-                                print('Invalid argument')
-                            elif isFloat(state[0]):
-                                print("Loop does not accept floats")
-                            elif int(state[0]) > 0 and int(state[0]) < 20:
-                                plays = int(state[0])
-                                succes = True
-                                break
-                            else:
-                                print('Invalid argment')
-                if not succes:
-                    if not state[0] == 'back':
-                        if length == 3:
-                            if not state[2].isdigit() or not state[1] == 'length':
-                                print('Invalid argument(s) for command: "loop"')
-                                break
-                            elif int(state[2]) > 0 and int(state[2]) < 20:
-                                plays = int(state[2])
-                                succes = True
-                        else:
-                            print('Invalid argument for command: "loop"')
-                            break
-                    else:
-                        print('You returned to the main menu')
-                        break
+            if length == 1 or length == 2:
+                print('Missing argument')
+                print('Set the loop length giving the arguments: length + "length in whole numbers"')
+            if length == 3:
+                if not state[2].isdigit() or not state[1] == 'length':
+                    pass
+                elif int(state[2]) > 0 and int(state[2]) < 20:
+                    plays = int(state[2])
+                    succes = True
+            if not succes:
+                if length == 1 or length == 2:
+                    pass
                 else:
-                    print('The number of loops has been set to: ' + str(plays))
-                    break
+                    print('Invalid argument for command: "loop"')
+                    print('Set the loop length giving the arguments: length + "length in whole numbers"')
+            else:
+                print('The number of loops has been set to: ' + str(plays))
             state = ['main']
         elif state[0] == 'measure':                 #If the state of the command is "measure" it can set the measure of the beat
             succes = False
-            measure = []
-            while True:
-                if length == 1:
-                    while True:
-                        state = [input('In what measure whould I play the rhythm? \n>>> ').lower()]
-                        state = state[0].split('/')
-                        state = [x for x in state if x]
-                        statelength = len(state)
-                        if state[0] == 'back':
-                            break
-                        elif statelength <= 1:
-                            print("Not enough arguments given")
-                        elif statelength > 2:
-                            print("Too many arguments given")
-                        elif not state[0].isdigit or not state[1].isdigit:
-                            print('Invalid argument')
-                        elif isFloat(state[0]) or isFloat(state[1]):
-                            print("Measure does not accept floats")
-                        elif int(state[0]) < 20:
-                            for x in rhythm_obj_lst:
-                                if x == int(state[1]):
-                                    measure = state.copy()
-                            if len(measure) > 0:
-                                succes = True
-                                break
-                            else:
-                                break
-                elif length == 2:
-                    while True:
-                        state = state[1].split('/')
-                        state = [x for x in state if x]
-                        statelength = len(state)
-                        if state[0] == 'back':
-                            break
-                        elif statelength <= 1:
-                            break
-                        elif statelength > 2:
-                            break
-                        elif not state[0].isdigit or not state[1].isdigit:
-                            print('Invalid argument')
-                        elif isFloat(state[0]):
-                            print("Measure does not accept floats")
-                        elif int(state[0]) < 20:
-                            for x in rhythm_obj_lst:
-                                if x == int(state[1]):
-                                    measure = state.copy()
-                            if len(measure) > 0:
-                                succes = True
-                                break
-                            else:
-                                break
-                if not succes:
-                    if not state[0] == 'back': 
-                            print('Invalid argument for command: "measure"')
-                            break
-                    else:
-                        print('You returned to the main menu')
-                        break
-                else:
-                    print('The measure has been set to: ' + str(measure[0]) + "/" + str(measure[1]))
-                    break
+            if length == 1:
+                print('Missing argument')
+                print('Give the wanted measure devided by a "/"')
+            elif length == 2:
+                state = state[1].split('/')
+                state = [x for x in state if x]
+                if len(state) > 2:
+                    pass
+                elif isFloat(state[0]) or isFloat(state[1]):
+                    pass
+                elif int(state[0]) < 20:
+                    for x in rhythm_obj_lst:
+                        if x == int(state[1]):
+                            measure = state.copy()
+                    if len(measure) > 0:
+                        succes = True
+            if not succes:
+                if not length == 1:
+                    print('Invalid argument for command: "measure"')
+                    print('Give the wanted measure devided by a "/"')
+            else:
+                print('The measure has been set to: ' + str(measure[0]) + "/" + str(measure[1]))
             state = ['main']        
-        elif state[0] == 'generate':
+        elif state[0] == 'generate':                #Generate the beat
             command = 'generate'
             beatGen(measure[0],measure[1])
             print("Succesfully generated the beat")
             state = ['main']
-        elif state[0] == 'play':
+        elif state[0] == 'play':                    #Play the beat
             command = 'play'
             state = ['main']
-        elif state[0] == 'stop':
+        elif state[0] == 'stop':                    #Stop the beat from playing
             command = 'stop'
             state = ['main']
-        elif state[0] == 'exit()' or 'exit':
+        elif state[0] == 'exit()' or state[0] == 'exit':    #Exit the program
             command = 'exit()'
             break
         else:                                       #If the command is unkown
@@ -619,4 +496,4 @@ if __name__ == '__main__':
     t3.join()
     t4.join()
 
-print("Succesfully done program closing")
+print("Succesfully closed the program")
