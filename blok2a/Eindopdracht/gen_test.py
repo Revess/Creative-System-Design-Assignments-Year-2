@@ -251,4 +251,8 @@ def beatGen(count, val):
     print(timestampSnare)
     print(timestampHat)
 
+<<<<<<< HEAD
 beatGen(measure[0],measure[1])
+=======
+beatGen(measure[0],measure[1])
+>>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
