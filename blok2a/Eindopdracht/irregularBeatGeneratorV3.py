@@ -279,81 +279,120 @@ def beatGen(count, val):                            #Generate a rhythm ready to 
     # print(timestampHat)
 
 def playLow():                                      #The same for every player only difference is the sample
-    global timestampSnare, command
+    global timestampKick, command
     while True:
-        lst = timestampSnare
+        lst = timestampKick
         if command == 'play':
-            startTime = time.time()                         #Updates the start time every new loop
-            x = 1                                           #Tracker for the current position in the list
-            length = len(lst)                               #The length of the list
-            for ts in lst:                                  #Walks us through the timestamps list
+            startTime = time.time()                 #Updates the start time every new loop
+            pos = 1                                 #Tracker for the current position in the list
+            length = len(lst)                       #The length of the list
+            for ts in lst:                          #Walks us through the timestamps list
                 while True:
-                    currentTime = time.time()               #Update the current time for the coming equation
+                    currentTime = time.time()       #Update the current time for the coming equation
                     if(currentTime - startTime >= ts):
-                        if x == length or command == 'stop' or command == 'exit()':
+                        if pos == length:
                             playObject = samples[2].play()        #Create a playObject so the last sample will be played fully
                             playObject.wait_done()
-                            x += 1
+                            pos += 1
                             command = 'none'
                             break
-                        else:
-                            samples[2].play()             #Play the given sample out of the file
-                            x += 1
+                        elif command == 'stop' or command == 'exit()':
+                            playObject = samples[2].play()        #Create a playObject so the last sample will be played fully
+                            playObject.wait_done()
                             break
+                        elif command == 'pause':
+                            playObject = samples[2].play()        #Create a playObject so the last sample will be played fully
+                            playObject.wait_done()
+                            while command == 'pause':
+                                time.sleep(0.001)
+                            startTime=time.time() - (currentTime - startTime)   #Set the starttime to the new offset
+                            break
+                        else:
+                            samples[2].play()       #Play the given sample out of the file
+                            pos += 1
+                            break
+                if command == 'stop' or command == 'exit()':
+                    break
         elif command == 'exit()':
             break
         else:
             time.sleep(0.001)
 
-def playMid():
+def playMid():                                      #The same for every player only difference is the sample
     global timestampSnare, command
     while True:
         lst = timestampSnare
         if command == 'play':
-            startTime = time.time()                         #Updates the start time every new loop
-            x = 1                                           #Tracker for the current position in the list
-            length = len(lst)                               #The length of the list
-            for ts in lst:                                  #Walks us through the timestamps list
+            startTime = time.time()                 #Updates the start time every new loop
+            pos = 1                                 #Tracker for the current position in the list
+            length = len(lst)                       #The length of the list
+            for ts in lst:                          #Walks us through the timestamps list
                 while True:
-                    currentTime = time.time()               #Update the current time for the coming equation
+                    currentTime = time.time()       #Update the current time for the coming equation
                     if(currentTime - startTime >= ts):
-                        if x == length or command == 'stop' or command == 'exit()':
+                        if pos == length:
                             playObject = samples[1].play()        #Create a playObject so the last sample will be played fully
                             playObject.wait_done()
-                            x += 1
+                            pos += 1
                             command = 'none'
                             break
-                        else:
-                            samples[1].play()             #Play the given sample out of the file
-                            x += 1
+                        elif command == 'stop' or command == 'exit()':
+                            playObject = samples[1].play()        #Create a playObject so the last sample will be played fully
+                            playObject.wait_done()
                             break
+                        elif command == 'pause':
+                            playObject = samples[1].play()        #Create a playObject so the last sample will be played fully
+                            playObject.wait_done()
+                            while command == 'pause':
+                                time.sleep(0.001)
+                            startTime=time.time() - (currentTime - startTime)   #Set the starttime to the new offset
+                            break
+                        else:
+                            samples[1].play()       #Play the given sample out of the file
+                            pos += 1
+                            break
+                if command == 'stop' or command == 'exit()':
+                    break
         elif command == 'exit()':
             break
         else:
             time.sleep(0.001)
 
-def playHigh():
+def playHigh():                                      #The same for every player only difference is the sample
     global timestampHat, command
     while True:
         lst = timestampHat
         if command == 'play':
-            startTime = time.time()                         #Updates the start time every new loop
-            x = 1                                           #Tracker for the current position in the list
-            length = len(lst)                               #The length of the list
-            for ts in lst:                                  #Walks us through the timestamps list
+            startTime = time.time()                 #Updates the start time every new loop
+            pos = 1                                 #Tracker for the current position in the list
+            length = len(lst)                       #The length of the list
+            for ts in lst:                          #Walks us through the timestamps list
                 while True:
-                    currentTime = time.time()               #Update the current time for the coming equation
+                    currentTime = time.time()       #Update the current time for the coming equation
                     if(currentTime - startTime >= ts):
-                        if x == length or command == 'stop' or command == 'exit()':
+                        if pos == length:
                             playObject = samples[6].play()        #Create a playObject so the last sample will be played fully
                             playObject.wait_done()
-                            x += 1
+                            pos += 1
                             command = 'none'
                             break
-                        else:
-                            samples[6].play()             #Play the given sample out of the file
-                            x += 1
+                        elif command == 'stop' or command == 'exit()':
+                            playObject = samples[6].play()        #Create a playObject so the last sample will be played fully
+                            playObject.wait_done()
                             break
+                        elif command == 'pause':
+                            playObject = samples[6].play()        #Create a playObject so the last sample will be played fully
+                            playObject.wait_done()
+                            while command == 'pause':
+                                time.sleep(0.001)
+                            startTime=time.time() - (currentTime - startTime)       #Set the starttime to the new offset
+                            break
+                        else:
+                            samples[6].play()       #Play the given sample out of the file
+                            pos += 1
+                            break
+                if command == 'stop' or command == 'exit()':
+                    break
         elif command == 'exit()':
             break
         else:
@@ -501,6 +540,7 @@ def main():
             state = ['main']
         elif state[0] == 'play':                    #Play the beat
             command = 'stop'
+            time.sleep(1)
             command = 'play'
             state = ['main']
         elif state[0] == 'stop':                    #Stop the beat from playing
