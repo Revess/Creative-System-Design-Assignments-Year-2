@@ -7,6 +7,7 @@ import threading
 from threading import Thread
 from midiutil import MIDIFile
 import math
+import keyboard
 
 ##--Objects--##
 samples = [sa.WaveObject.from_wave_file("./audioFiles/CowBell.wav"),sa.WaveObject.from_wave_file("./audioFiles/snare.wav"),sa.WaveObject.from_wave_file("./audioFiles/SecretKick.wav"),sa.WaveObject.from_wave_file("./audioFiles/RoninKick.wav"),sa.WaveObject.from_wave_file("./audioFiles/PrydaSnare.wav"),sa.WaveObject.from_wave_file("./audioFiles/Hard.wav"), sa.WaveObject.from_wave_file("./audioFiles/Hat_Closed_2.wav")]
@@ -521,6 +522,8 @@ def main():
         else:                                       #If the command is unknown
             print('Unknown command, type "help" to see the full list of commands')
             state = ['main']
+
+
 
 if __name__ == '__main__':
     t1 = Thread(target=main)

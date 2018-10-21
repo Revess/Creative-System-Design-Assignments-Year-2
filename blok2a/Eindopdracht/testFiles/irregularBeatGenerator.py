@@ -30,13 +30,10 @@ plays = 1
 measure = ['4', '4']
 command = ''
 percentages = [100,[50,50],[10,60,30],[10,15,50,25],[7.5,12.5,20,40,20]]
-<<<<<<< HEAD
 track = 0
 channel = 9
 timer = 0
 velocity = 100
-=======
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
 
 ##--Functions--##
 def isFloat(x):                                     #To check if a value is a floating point number, if it is not return false
@@ -46,19 +43,10 @@ def isFloat(x):                                     #To check if a value is a fl
     except ValueError:
         return True
 
-<<<<<<< HEAD
 def convertToStamps(lst):                           #Convert a list to timestamps
     count = plays
     stamps = []
     ms_lst = lst
-=======
-def convertToStamps(lst):
-    global plays
-    count = plays
-    stamps = []
-    ms_lst = lst
-    print(ms_lst)
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
     offset = ms_lst.pop()
     x = 0 + offset                                  #The old timestamp value is x
     stamps.insert(0,x)                              #Make the starting sample start on timestamp 0
@@ -71,7 +59,6 @@ def convertToStamps(lst):
     stamps.pop()                                    #Remove the last stamp to so the offset we created at the start (insert a 0) works right
     return stamps
 
-<<<<<<< HEAD
 def lowGen(count,val,lst):                          #This works the same for every layer of generation
     global percentages,tempo
     count = count*(tempo/(val/val))                 #Transforms the musical terminoligy to floating point numbers in miliseconds according to the BPM. 
@@ -84,39 +71,18 @@ def lowGen(count,val,lst):                          #This works the same for eve
         if val == 1:                                #If the measure is x/1 the kick can only append a whole note
             lst.append(1)
         elif val == 2:                              #If the measure is x/2 the kick can only append a whole or half note (50/50)
-=======
-def lowGen(count,val,lst):
-    global percentages,tempo
-    count = count*(tempo/(val/val))
-    pos = 0
-    offset = 100*random.random()
-    bitoff = False
-    while count > pos:
-        rnd = 100*random.random()
-        if val == 1:
-            lst.append(1)
-        elif val == 2:
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
             if rnd <= percentages[1][0]:
                 lst.append(1)
             elif rnd > percentages[1][1]:
                 lst.append(2)
-<<<<<<< HEAD
         elif val == 4:                              #If the measure is x/4 the kick can only append a whole, half or quarter note (10/60/30)
-=======
-        elif val == 4:
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
             if rnd <= percentages[2][0]:
                 lst.append(1)
             elif rnd > percentages[2][0] and rnd <= percentages[2][0]+percentages[2][1]:
                 lst.append(2)
             elif rnd > percentages[2][0]+percentages[2][1]:
                 lst.append(4)
-<<<<<<< HEAD
         elif val == 8:                              #If the measure is x/8 the kick can only append a whole, half, quarter or eight note (10/15/50/25)
-=======
-        elif val == 8:
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
             if rnd <= percentages[3][0]:
                 lst.append(1)
             elif rnd > percentages[3][0] and rnd <= percentages[3][0]+percentages[3][1]:
@@ -125,11 +91,7 @@ def lowGen(count,val,lst):
                 lst.append(4)
             elif rnd > percentages[3][0]+percentages[3][1]+percentages[3][2]:
                 lst.append(8)
-<<<<<<< HEAD
         elif val == 16:                             #If the measure is x/16 the kick can only append a whole, half, quarter, eight or sixteenth note (7.5/12.5/20/40/20)
-=======
-        elif val == 16:
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
             if rnd <= percentages[4][0]:
                 lst.append(1)
             elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
@@ -140,7 +102,6 @@ def lowGen(count,val,lst):
                 lst.append(8)
             elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
                 lst.append(16)
-<<<<<<< HEAD
         lst.reverse()                               #Get the last element
         lst[0]/=val                                 #Transform the note to floatingpoint in ratio
         lst[0]=tempo/lst[0]                         #Transform to miliseconds
@@ -162,29 +123,6 @@ def lowGen(count,val,lst):
     if not bitoff:                                  #Makes sure the offset will be 0 if the chances weren't correct
         offset = 0
     lst.append(offset)                              #Add the offset at the end for the timestamp calculations
-=======
-        lst.reverse()
-        lst[0]/=val 
-        lst[0]=tempo/lst[0]
-        pos += lst[0]
-        lst.reverse()
-    if pos > count:
-        dif = 0
-        if offset <= 25:
-            offset = (tempo/(val/val))/2
-            dif = (pos - count)+offset
-        else:
-            dif = (pos - count)
-        lst.reverse()
-        lst[0]-=dif
-        if lst[0] < 0:
-            lst[1]+=lst[0]
-            lst.remove(lst[0])
-        lst.reverse()
-    if not bitoff:
-        offset = 0
-    lst.append(offset)
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
     return lst
 
 def midGen(count,val,lst):
@@ -506,10 +444,7 @@ def main():
                             print('BPM does not accept floats')
                         elif int(state[0]) > 0 and int(state[0]) < 999:
                             bpm = int(state[0])
-<<<<<<< HEAD
                             tempo = 60/bpm
-=======
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
                             succes = True
                             break
                 elif length == 2:
@@ -519,10 +454,7 @@ def main():
                         print('BPM does not accept floats')
                     elif int(state[1]) > 0 and int(state[1]) < 999:
                         bpm = int(state[1])
-<<<<<<< HEAD
                         tempo = 60/bpm
-=======
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
                         succes = True
                 if not succes:
                     if state[0] == 'back':
@@ -661,18 +593,10 @@ def main():
         elif state[0] == 'generate':
             command = 'generate'
             beatGen(measure[0],measure[1])
-<<<<<<< HEAD
             print("Succesfully generated the beat")
             state = ['main']
         elif state[0] == 'play':
             command = 'play'
-=======
-            state = ['main']
-        elif state[0] == 'play':
-            playHigh()
-            playLow()
-            playMid()
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6
             state = ['main']
         elif state[0] == 'stop':
             command = 'stop'
@@ -683,7 +607,6 @@ def main():
         else:                                       #If the command is unkown
             print('Unkown command, type "help" to see the full list of commands')
             state = ['main']
-<<<<<<< HEAD
 
 if __name__ == '__main__':
     t1 = Thread(target=main)
@@ -702,6 +625,3 @@ if __name__ == '__main__':
     t4.join()
 
 print("Succesfully done program closing")
-=======
-main()
->>>>>>> ba24dde77ecdfffedc819744e94cc64bb78aaea6

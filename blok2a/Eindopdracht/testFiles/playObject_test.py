@@ -1,6 +1,6 @@
 import simpleaudio as sa
 
-samples = [sa.WaveObject.from_wave_file("../audioFiles/CowBell.wav")]
+samples = [sa.WaveObject.from_wave_file("./audioFiles/CowBell.wav")]
 x = 0
 while True:    
     playObject = samples[0].play()

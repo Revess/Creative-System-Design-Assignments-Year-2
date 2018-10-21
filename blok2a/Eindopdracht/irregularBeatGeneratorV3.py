@@ -1,12 +1,14 @@
 ##--Imports--##
-import simpleaudio as sa
+import math
 import random
+import threading
 import time
 from random import shuffle
-import threading
 from threading import Thread
+
+import simpleaudio as sa
 from midiutil import MIDIFile
-import math
+from pynput.keyboard import Controller, Key, Listener
 
 ##--Objects--##
 samples = [sa.WaveObject.from_wave_file("./audioFiles/CowBell.wav"),sa.WaveObject.from_wave_file("./audioFiles/snare.wav"),sa.WaveObject.from_wave_file("./audioFiles/SecretKick.wav"),sa.WaveObject.from_wave_file("./audioFiles/RoninKick.wav"),sa.WaveObject.from_wave_file("./audioFiles/PrydaSnare.wav"),sa.WaveObject.from_wave_file("./audioFiles/Hard.wav"), sa.WaveObject.from_wave_file("./audioFiles/Hat_Closed_2.wav")]
@@ -29,8 +31,46 @@ track = 0
 channel = 0
 timer = 0
 velocity = 100
+statedepth = -1
+statestorage = []
+keyboard = Controller()
 
 ##--Functions--##
+def on_press(key):                                  #Do something if a key is pressed
+    pass
+def on_release(key):                                #Do something if key is released
+    global statedepth, statestorage, command
+    if key == Key.up:                               #When the up arrow is released it will scroll upwards in the code
+        if len(statestorage) == 0:                  #Prevents code from breaking (When the list is empty)
+            keyboard.type('')
+        elif statedepth >= len(statestorage)-1:     #Prevents code from breaking (above highest possible)
+            for stor in list(statestorage[statedepth]):     #First it will delete what has been written in the state
+                keyboard.press(Key.backspace)
+                keyboard.release(Key.backspace)
+            for stor in list(statestorage[statedepth]):     #Only type the highest stored value
+                keyboard.type(str(stor))
+        else:
+            statedepth+=1
+            for stor in list(statestorage[statedepth-1]):   #First it will delete what has been written in the state
+                keyboard.press(Key.backspace)
+                keyboard.release(Key.backspace)
+            for stor in list(statestorage[statedepth]):     #Then it will type what has last been written (jumps up in time)
+                keyboard.type(str(stor))
+    elif key == Key.down:                             #When the up arrow is released it will scroll downwards in the code
+        if statedepth <= 0:                         #Prevents code from breaking (below lowest low fix)
+            if statedepth >-1:
+                statedepth = -1
+            keyboard.type('')
+        else:
+            statedepth-=1
+            for stor in list(statestorage[statedepth]):     #First it will delete what has been written in the state
+                keyboard.press(Key.backspace)
+                keyboard.release(Key.backspace)
+            for stor in list(statestorage[statedepth]):     #Then it will type what has last been written (jumps down in time)
+                keyboard.type(str(stor))
+    if command == 'exit()':
+        return False
+
 def isFloat(x):                                     #To check if a value is a floating point number, if it is not return false
     try:
         int(x)
@@ -53,8 +93,11 @@ def convertToStamps(lst):                           #Convert a list to timestamp
     stamps.pop()                                    #Remove the last stamp to so the offset we created at the start (insert a 0) works right
     return stamps
 
-def lowGen(count,val,lst):                          #This works the same for every layer of generation
+def Gen(count,val,lst,layer):
     global percentages,tempo
+    layer*=val
+    if layer > 16:
+        layer = 16
     count = count*(tempo/(val/val))                 #Transforms the musical terminology to floating point numbers in milliseconds according to the BPM. 
                                                     #7/4 with a bpm of 120 will make it 3.5/4, because one quarter note will be 0.5ms there will fit 7 quarter notes in one measure
     pos = 0                                         #Tracks the position of how long one measure will be
@@ -62,21 +105,21 @@ def lowGen(count,val,lst):                          #This works the same for eve
     bitoff = False                                  #Offset is set to 0 right now
     while count > pos:
         rnd = 100*random.random()
-        if val == 1:                                #If the measure is x/1 the kick can only append a whole note
+        if layer == 1:                                #If the measure is x/1 the kick can only append a whole note
             lst.append(1)
-        elif val == 2:                              #If the measure is x/2 the kick can only append a whole or half note (50/50)
+        elif layer == 2:                              #If the measure is x/2 the kick can only append a whole or half note (50/50)
             if rnd <= percentages[1][0]:
                 lst.append(1)
             elif rnd > percentages[1][1]:
                 lst.append(2)
-        elif val == 4:                              #If the measure is x/4 the kick can only append a whole, half or quarter note (10/60/30)
+        elif layer == 4:                              #If the measure is x/4 the kick can only append a whole, half or quarter note (10/60/30)
             if rnd <= percentages[2][0]:
                 lst.append(1)
             elif rnd > percentages[2][0] and rnd <= percentages[2][0]+percentages[2][1]:
                 lst.append(2)
             elif rnd > percentages[2][0]+percentages[2][1]:
                 lst.append(4)
-        elif val == 8:                              #If the measure is x/8 the kick can only append a whole, half, quarter or eight note (10/15/50/25)
+        elif layer == 8:                              #If the measure is x/8 the kick can only append a whole, half, quarter or eight note (10/15/50/25)
             if rnd <= percentages[3][0]:
                 lst.append(1)
             elif rnd > percentages[3][0] and rnd <= percentages[3][0]+percentages[3][1]:
@@ -85,7 +128,7 @@ def lowGen(count,val,lst):                          #This works the same for eve
                 lst.append(4)
             elif rnd > percentages[3][0]+percentages[3][1]+percentages[3][2]:
                 lst.append(8)
-        elif val == 16:                             #If the measure is x/16 the kick can only append a whole, half, quarter, eight or sixteenth note (7.5/12.5/20/40/20)
+        elif layer == 16:                             #If the measure is x/16 the kick can only append a whole, half, quarter, eight or sixteenth note (7.5/12.5/20/40/20)
             if rnd <= percentages[4][0]:
                 lst.append(1)
             elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
@@ -125,134 +168,6 @@ def lowGen(count,val,lst):                          #This works the same for eve
     lst.append(offset)                              #Add the offset at the end for the timestamp calculations
     return lst
 
-def midGen(count,val,lst):
-    global percentages,tempo
-    count = count*(tempo/(val/val))
-    pos = 0
-    offset = 100*random.random()
-    bitoff = False
-    while count > pos:
-        rnd = 100*random.random()
-        if val == 1:
-            if rnd <= percentages[1][0]:
-                lst.append(1)
-            elif rnd > percentages[1][1]:
-                lst.append(2)
-        elif val == 2:
-            if rnd <= percentages[2][0]:
-                lst.append(1)
-            elif rnd > percentages[2][0] and rnd <= percentages[2][0]+percentages[2][1]:
-                lst.append(2)
-            elif rnd > percentages[2][0]+percentages[2][1]:
-                lst.append(4)
-        elif val == 4:
-            if rnd <= percentages[3][0]:
-                lst.append(1)
-            elif rnd > percentages[3][0] and rnd <= percentages[3][0]+percentages[3][1]:
-                lst.append(2)
-            elif rnd > percentages[3][0]+percentages[3][1] and rnd <= percentages[3][0]+percentages[3][1]+percentages[3][2]:
-                lst.append(4)
-            elif rnd > percentages[3][0]+percentages[3][1]+percentages[3][2]:
-                lst.append(8)
-        elif val == 8:
-            if rnd <= percentages[4][0]:
-                lst.append(1)
-            elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
-                lst.append(2)
-            elif rnd > percentages[4][0]+percentages[4][1] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]:
-                lst.append(4)
-            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
-                lst.append(8)
-            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
-                lst.append(16)        
-        elif val == 16:
-            if rnd <= percentages[4][0]:
-                lst.append(1)
-            elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
-                lst.append(2)
-            elif rnd > percentages[4][0]+percentages[4][1] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]:
-                lst.append(4)
-            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
-                lst.append(8)
-            elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
-                lst.append(16)
-        lst.reverse()
-        lst[0]/=4 
-        lst[0]=tempo/lst[0]
-        pos += lst[0]
-        lst.reverse()
-    if pos > count:
-        dif = 0
-        if offset <= 80:
-            offset = tempo/(val/val)
-            dif = (pos - count)+offset
-            bitoff = True
-        else:
-            dif = (pos - count)
-        lst.reverse()
-        lst[0]-=dif
-        if lst[0] < 0:
-            lst[1]+=lst[0]
-            lst.remove(lst[0])
-        lst.reverse()
-    if not bitoff:
-        offset = 0
-    count = plays
-    shuffledlst = lst.copy()
-    while count > 1:
-        shuffle(shuffledlst)
-        lst = lst+shuffledlst
-        count-=1
-    lst.append(offset)
-    return lst
-
-def highGen(count,val,lst):
-    global percentages,tempo
-    count = count*(tempo/(val/val))
-    pos = 0
-    offset = 100*random.random()
-    bitoff = False
-    while count > pos:
-        rnd = 100*random.random()
-        if rnd <= percentages[4][0]:
-            lst.append(1)
-        elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
-            lst.append(2)
-        elif rnd > percentages[4][0]+percentages[4][1] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]:
-            lst.append(4)
-        elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
-            lst.append(8)
-        elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
-            lst.append(16)
-        lst.reverse()
-        lst[0]/=4 
-        lst[0]=tempo/lst[0]
-        pos += lst[0]
-        lst.reverse()
-    if pos > count:
-        dif = 0
-        if offset <= 15:
-            offset = (tempo/(val/val))/2
-            dif = (pos - count)+offset
-        else:
-            dif = (pos - count)
-        lst.reverse()
-        lst[0]-=dif
-        if lst[0] < 0:
-            lst[1]+=lst[0]
-            lst.remove(lst[0])
-        lst.reverse()
-    if not bitoff:
-        offset = 0
-    count = plays
-    shuffledlst = lst.copy()
-    while count > 1:
-        shuffle(shuffledlst)
-        lst = lst+shuffledlst
-        count-=1
-    lst.append(offset)
-    return lst
-
 def beatGen(count, val):                            #Generate a rhythm ready to play args is the measure
     global timestampKick, timestampSnare, timestampHat, rhythmKick, rhythmSnare, rhythmHat, command
     beatCount = int(count)
@@ -266,9 +181,9 @@ def beatGen(count, val):                            #Generate a rhythm ready to 
         timestampKick = []
         timestampSnare = []
         timestampHat = []
-        rhythmKick = lowGen(beatCount,oneBeatVal,rhythmKick)
-        rhythmSnare = midGen(beatCount,oneBeatVal,rhythmSnare)
-        rhythmHat = highGen(beatCount,oneBeatVal,rhythmHat)
+        rhythmKick = Gen(beatCount,oneBeatVal,rhythmKick,1)
+        rhythmSnare = Gen(beatCount,oneBeatVal,rhythmSnare,2)
+        rhythmHat = Gen(beatCount,oneBeatVal,rhythmHat,4)
         timestampKick = convertToStamps(rhythmKick)
         timestampSnare = convertToStamps(rhythmSnare)
         timestampHat = convertToStamps(rhythmHat)
@@ -278,11 +193,16 @@ def beatGen(count, val):                            #Generate a rhythm ready to 
     # print(timestampSnare)
     # print(timestampHat)
 
-def playLow():                                      #The same for every player only difference is the sample
-    global timestampKick, command
+def player(s,stamps):                                      #The same for every player only difference is the sample
+    global timestampKick,timestampSnare,timestampHat, command
     while True:
-        lst = timestampKick
-        if command == 'play':
+        if stamps == 0:
+            lst = timestampKick
+        elif stamps == 1:
+            lst = timestampSnare
+        elif stamps == 2:
+            lst = timestampHat
+        if command == 'play' and len(lst) > 0:
             startTime = time.time()                 #Updates the start time every new loop
             pos = 1                                 #Tracker for the current position in the list
             length = len(lst)                       #The length of the list
@@ -291,104 +211,24 @@ def playLow():                                      #The same for every player o
                     currentTime = time.time()       #Update the current time for the coming equation
                     if(currentTime - startTime >= ts):
                         if pos == length:
-                            playObject = samples[2].play()        #Create a playObject so the last sample will be played fully
+                            playObject = samples[s].play()        #Create a playObject so the last sample will be played fully
                             playObject.wait_done()
                             pos += 1
                             command = 'none'
                             break
                         elif command == 'stop' or command == 'exit()':
-                            playObject = samples[2].play()        #Create a playObject so the last sample will be played fully
+                            playObject = samples[s].play()        #Create a playObject so the last sample will be played fully
                             playObject.wait_done()
                             break
                         elif command == 'pause':
-                            playObject = samples[2].play()        #Create a playObject so the last sample will be played fully
+                            playObject = samples[s].play()        #Create a playObject so the last sample will be played fully
                             playObject.wait_done()
                             while command == 'pause':
                                 time.sleep(0.001)
                             startTime=time.time() - (currentTime - startTime)   #Set the starttime to the new offset
                             break
                         else:
-                            samples[2].play()       #Play the given sample out of the file
-                            pos += 1
-                            break
-                if command == 'stop' or command == 'exit()':
-                    break
-        elif command == 'exit()':
-            break
-        else:
-            time.sleep(0.001)
-
-def playMid():                                      #The same for every player only difference is the sample
-    global timestampSnare, command
-    while True:
-        lst = timestampSnare
-        if command == 'play':
-            startTime = time.time()                 #Updates the start time every new loop
-            pos = 1                                 #Tracker for the current position in the list
-            length = len(lst)                       #The length of the list
-            for ts in lst:                          #Walks us through the timestamps list
-                while True:
-                    currentTime = time.time()       #Update the current time for the coming equation
-                    if(currentTime - startTime >= ts):
-                        if pos == length:
-                            playObject = samples[1].play()        #Create a playObject so the last sample will be played fully
-                            playObject.wait_done()
-                            pos += 1
-                            command = 'none'
-                            break
-                        elif command == 'stop' or command == 'exit()':
-                            playObject = samples[1].play()        #Create a playObject so the last sample will be played fully
-                            playObject.wait_done()
-                            break
-                        elif command == 'pause':
-                            playObject = samples[1].play()        #Create a playObject so the last sample will be played fully
-                            playObject.wait_done()
-                            while command == 'pause':
-                                time.sleep(0.001)
-                            startTime=time.time() - (currentTime - startTime)   #Set the starttime to the new offset
-                            break
-                        else:
-                            samples[1].play()       #Play the given sample out of the file
-                            pos += 1
-                            break
-                if command == 'stop' or command == 'exit()':
-                    break
-        elif command == 'exit()':
-            break
-        else:
-            time.sleep(0.001)
-
-def playHigh():                                      #The same for every player only difference is the sample
-    global timestampHat, command
-    while True:
-        lst = timestampHat
-        if command == 'play':
-            startTime = time.time()                 #Updates the start time every new loop
-            pos = 1                                 #Tracker for the current position in the list
-            length = len(lst)                       #The length of the list
-            for ts in lst:                          #Walks us through the timestamps list
-                while True:
-                    currentTime = time.time()       #Update the current time for the coming equation
-                    if(currentTime - startTime >= ts):
-                        if pos == length:
-                            playObject = samples[6].play()        #Create a playObject so the last sample will be played fully
-                            playObject.wait_done()
-                            pos += 1
-                            command = 'none'
-                            break
-                        elif command == 'stop' or command == 'exit()':
-                            playObject = samples[6].play()        #Create a playObject so the last sample will be played fully
-                            playObject.wait_done()
-                            break
-                        elif command == 'pause':
-                            playObject = samples[6].play()        #Create a playObject so the last sample will be played fully
-                            playObject.wait_done()
-                            while command == 'pause':
-                                time.sleep(0.001)
-                            startTime=time.time() - (currentTime - startTime)       #Set the starttime to the new offset
-                            break
-                        else:
-                            samples[6].play()       #Play the given sample out of the file
+                            samples[s].play()       #Play the given sample out of the file
                             pos += 1
                             break
                 if command == 'stop' or command == 'exit()':
@@ -400,12 +240,14 @@ def playHigh():                                      #The same for every player 
 
 def writeToMidi():
     filename = 'beat.mid'
-    MyMIDI = MIDIFile(2)
-    MyMIDI.addTempo(track,timer,bpm)
-    MyMIDI.addTimeSignature(track,timer,int(measure[0]),int(math.log(int(measure[1]),2)),24)
+    MyMIDI = MIDIFile(2)                 #Om welk midifile het gaat
+    MyMIDI.addTempo(track,timer,bpm)     #Om het tempo in te stellen
+    MyMIDI.addTimeSignature(track,timer,int(measure[0]),int(math.log(int(measure[1]),2)),24)    #Timesignature heeft een track nummer nodig(0), een tijdplek (timer) om aan te geven waar de midi start (begint nu vanaf miditick 1),
+                                                                                                #Daarnaast het aantal tellen in een maat (nu kan de user opgeven, maar bijvoorbeeld 4), de waarde van een tel uitgedrukt in een exponent(dus 3 =
+                                                                                                #2^3= 8ste noot enz., en daarnaast het aantal clocks per tick. 24 in een kwartnoot.
     pos = 0
     for ts in timestampKick:
-        MyMIDI.addNote(track,channel,36,2*ts,rhythmKick[pos],velocity)
+        MyMIDI.addNote(track,channel,36,2*ts,rhythmKick[pos],velocity)                          #Voeg een noot toe door de track, het midikanaal, nootnummer, de starttijd (dus de positie in het grid (2 keer de timestamp waarde)), nootlengte in ms en de velocity
         pos+=1
     pos = 0
     for ts in timestampSnare:
@@ -416,33 +258,55 @@ def writeToMidi():
         MyMIDI.addNote(track,channel,42,2*ts,rhythmHat[pos],velocity)
         pos+=1
     with open(filename, 'wb') as output_file:
-        MyMIDI.writeFile(output_file)
-        print('Successfully exported the rhythm as: ' + str(filename))
+        MyMIDI.writeFile(output_file)                                                           #Schrijf het bestand uit
+        print('Successfully exported the rhythm as: ' + str(filename))                          #Gwn een leuk print ding
 
 ##--Main--##
 def main():
-    global bpm, plays, rhythm_obj_lst, tempo, measure, command, timestampKick, timestampSnare, timestampHat, rhythmKick, rhythmSnare, rhythmHat
+    global bpm, plays, rhythm_obj_lst, tempo, measure, command, timestampKick, timestampSnare, timestampHat, rhythmKick, rhythmSnare, rhythmHat, statedepth, statestorage
     state = ['main']
     length = 0
     print("Welcome to the irregular beat generator. Type 'help' to display all the available commands")
     while True:
         if state[0] == 'main':                      #The return back to give another command to the system
-            state = input('>>> ').lower().split()
+            statedepth = -1
+            state = input('>>> ').lower().split()   #Make sure the userinput is lowercased and spit into an array (array ignores spaces)
             length = len(state)
+            if not len(state) == 0:                 #Makes only if the input is filled with text
+                string = ' '.join(state)            #Joins the list of input again with spaces
+                statestorage.insert(0,string)       #Add the input string to the storage
+            else:
+                state = ['main']
         elif state[0] == 'help':                    #If the command of the user is "help" it can view the help file
             if length == 1:
                 print('To view the options of each command type: "Help + [command]". \nThe commands are not case sensitive.')
-                print('These are the commands you can use: \nbpm        exit/exit() \ngenerate   loop \nmeasure    play \nstop       view')
+                print('These are the commands you can use: \n-bpm           -continue\n-exit/exit()   -export/ex\n-generate/gen  -help\n-loop          -measure\n-pause         -play\n-stop          -view')
             elif length == 2:
                 if state[1] == 'bpm':
                     print('With bpm you can set the bpm for the generated rhythm')
                     print('The command "bpm" accepts the following arguments: \n-The bpm you would like to use in whole numbers \nExample: bpm 120')
+                elif state[1] == 'continue':
+                    print('With continue you can continue a paused loop')
+                elif state[1] == 'exit' or state[1] == 'exit()':
+                    print('With exit or exit() you can exit the program safely')
+                elif state[1] == 'export' or state[1] == 'ex':
+                    print('With export or ex you can export the generated beat as a ".mid" file')
+                elif state[1] == 'generate' or state[1] == 'gen':
+                    print('With generate or gen you can generate a beat')
+                elif state[1] == 'help':
+                    print('With help you can read the help file')
                 elif state[1] == 'loop':
                     print('With loop you can set how long the generated rhythm will be.')
                     print('The command "loop" accepts the following arguments: \n-To set the length type "length" followed by a whole number \nExample: loop length 5')
                 elif state[1] == 'measure':
                     print('With measure you can set the measure for the generated rhythm')
                     print('The command "measure" accepts the following arguments: \n-Set the measure by typing the bar count and the one beat value divided by a "/" \nExample: measure 4/4')
+                elif state[1] == 'pause':
+                    print('With pause you can pause the current loop, continue it with the command conintue')
+                elif state[1] == 'play':
+                    print('With play you can play the generated loop')
+                elif state[1] == 'stop':
+                    print('With stop you can stop the current playing loop')
                 elif state[1] == 'view':
                     print('With view you can view the current values for the commands')
                     print('The command "view" accepts the following arguments: \n-Bpm \n-Measure \n-loop \nExample: view bpm')
@@ -508,7 +372,7 @@ def main():
             else:
                 print('The number of loops has been set to: ' + str(plays))
             state = ['main']
-        elif state[0] == 'measure':                 #If the state of the command is "measure" it can set the measure of the beat
+        elif state[0] == 'measure' or state[0] == 'meas':                 #If the state of the command is "measure" it can set the measure of the beat
             success = False
             if length == 1:
                 print('Missing argument')
@@ -564,14 +428,18 @@ def main():
 
 if __name__ == '__main__':
     t1 = Thread(target=main)
-    t2 = Thread(target=playHigh)
-    t3 = Thread(target=playMid)
-    t4 = Thread(target=playLow)
+    t2 = Thread(target=player, args=(2,0))          #The Kick playing thread
+    t3 = Thread(target=player, args=(1,1))          #The Snare playing thread
+    t4 = Thread(target=player, args=(6,2))          #The Hat playing thread
 
     t1.start()
     t2.start()
     t3.start()
     t4.start()
+    with Listener(                                  #Start the listener function Thread (baked into pynput library)
+        on_press=on_press,
+        on_release=on_release) as listener:
+            listener.join()
 
     t1.join()
     t2.join()
