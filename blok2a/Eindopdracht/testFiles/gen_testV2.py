@@ -4,10 +4,9 @@ import threading
 from threading import Thread
 from random import shuffle
 
-bpm = 120
+bpm = 200
 tempo = 60 / bpm
 timestamps = [0]
-rhythm = []
 rhythm_obj_lst = [1,2,4,8,16]
 rhythmKick = []
 rhythmSnare = []
@@ -22,77 +21,69 @@ percentages = [100,[50,50],[10,60,30],[10,15,50,25],[7.5,12.5,20,40,20]]
 
 def convertToStamps(lst):                           #Convert a list to timestamps
     stamps = []
-    ms_lst = lst.copy()
-    offset = ms_lst.pop()
-    x = 0 + offset                                  #The old timestamp value is x
-    stamps.insert(0,x)                              #Make the starting sample start on timestamp 0
-    #while count > 0:                               #If we still didn't get to the end of the requested amount of loops repeat
-    for f in ms_lst:                                #For every floatingpoint number in the millisecond list
-        x += f                                      #Add the current floatingpoint to the previous one, the new timestamp is created
-        stamps.append(x)                            #Add this timestamp to the list
-    #    count -= 1                                 #One loop is compleated substract one
-    #    shuffle(ms_lst)                            #Mix the old rhythm playlist so we can generate more random lists (See the function for explanation)
-    stamps.pop()                                    #Remove the last stamp to so the offset we created at the start (insert a 0) works right
+    for f in lst:
+        f*=tempo
+        stamps.append(f)
     return stamps
 
 
 def Gen(count,val,lst,layer):
     global percentages
-    ntempo = tempo/(val/4)
+    rhythm = []                                     #List of the exported rhythm
     layer*=val
+    val/=4
     if layer > 16:
         layer = 16
-    count = count*(ntempo/(val/val))                 #Transforms the musical terminology to floating point numbers in milliseconds according to the BPM. 
+    count/=val                                      #Transforms the musical terminology to floating point numbers in milliseconds according to the BPM. 
                                                     #7/4 with a bpm of 120 will make it 3.5/4, because one quarter note will be 0.5ms there will fit 7 quarter notes in one measure
     pos = 0                                         #Tracks the position of how long one measure will be
     offset = 100*random.random()                    #Create random value for the offset chance
     bitoff = False                                  #Offset is set to 0 right now
     while count > pos:
         rnd = 100*random.random()
-        if layer == 1:                                #If the measure is x/1 the kick can only append a whole note
-            lst.append(1)
-        elif layer == 2:                              #If the measure is x/2 the kick can only append a whole or half note (50/50)
+        if layer == 1:                              #If the measure is x/1 the kick can only append a whole note
+            lst.append(4)
+        elif layer == 2:                            #If the measure is x/2 the kick can only append a whole or half note (50/50)
             if rnd <= percentages[1][0]:
-                lst.append(1)
+                lst.append(4)
             elif rnd > percentages[1][1]:
                 lst.append(2)
-        elif layer == 4:                              #If the measure is x/4 the kick can only append a whole, half or quarter note (10/60/30)
+        elif layer == 4:                            #If the measure is x/4 the kick can only append a whole, half or quarter note (10/60/30)
             if rnd <= percentages[2][0]:
-                lst.append(1)
+                lst.append(4)
             elif rnd > percentages[2][0] and rnd <= percentages[2][0]+percentages[2][1]:
                 lst.append(2)
             elif rnd > percentages[2][0]+percentages[2][1]:
-                lst.append(4)
-        elif layer == 8:                              #If the measure is x/8 the kick can only append a whole, half, quarter or eight note (10/15/50/25)
-            if rnd <= percentages[3][0]:
                 lst.append(1)
+        elif layer == 8:                            #If the measure is x/8 the kick can only append a whole, half, quarter or eight note (10/15/50/25)
+            if rnd <= percentages[3][0]:
+                lst.append(4)
             elif rnd > percentages[3][0] and rnd <= percentages[3][0]+percentages[3][1]:
                 lst.append(2)
             elif rnd > percentages[3][0]+percentages[3][1] and rnd <= percentages[3][0]+percentages[3][1]+percentages[3][2]:
-                lst.append(4)
-            elif rnd > percentages[3][0]+percentages[3][1]+percentages[3][2]:
-                lst.append(8)
-        elif layer == 16:                             #If the measure is x/16 the kick can only append a whole, half, quarter, eight or sixteenth note (7.5/12.5/20/40/20)
-            if rnd <= percentages[4][0]:
                 lst.append(1)
+            elif rnd > percentages[3][0]+percentages[3][1]+percentages[3][2]:
+                lst.append(0.5)
+        elif layer == 16:                           #If the measure is x/16 the kick can only append a whole, half, quayrter, eight or sixteenth note (7.5/12.5/20/40/20)
+            if rnd <= percentages[4][0]:
+                lst.append(4)
             elif rnd > percentages[4][0] and rnd <= percentages[4][0]+percentages[4][1]:
                 lst.append(2)
             elif rnd > percentages[4][0]+percentages[4][1] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]:
-                lst.append(4)
+                lst.append(1)
             elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2] and rnd <= percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
-                lst.append(8)
+                lst.append(0.5)
             elif rnd > percentages[4][0]+percentages[4][1]+percentages[4][2]+percentages[4][3]:
-                lst.append(16)
+                lst.append(0.25)
         lst.reverse()                               #Get the last element
-        lst[0]/=4                                 #Transform the note to floatingpoint in ratio
-        lst[0]=ntempo/lst[0]                         #Transform to milliseconds
         pos += lst[0]                               #The measure will fill up according to the length of the generated note
         lst.reverse()                               #Put the value back at the end
     if pos > count:                                 #If list is overcounted check by how much and remove the difference
         dif = 0
         if offset <= 25:                            #25% chance there will be an offset for the kick
-            offset = (ntempo/(val/val))/2
+            offset = 0.5
             dif = (pos - count)+offset
+            bitoff = True
         else:
             dif = (pos - count)                     #Calculate the difference of the overcount
         lst.reverse()                               #Get the last element
@@ -105,12 +96,17 @@ def Gen(count,val,lst,layer):
         offset = 0
     count = plays
     shuffledlst = lst.copy()
-    while count > 1:
+    while count > 1:                                #Generate a list with as many loops as user defined
         shuffle(shuffledlst)
         lst = lst+shuffledlst
         count-=1
-    lst.append(offset)                              #Add the offset at the end for the timestamp calculations
-    return lst
+    oldtimeval = 0 + offset
+    rhythm.insert(0,oldtimeval)
+    for f in lst:
+        oldtimeval+=f
+        rhythm.append(oldtimeval)
+    rhythm.pop()
+    return rhythm
 
 def beatGen(count, val):                            #Generate a rhythm ready to play args is the measure
     global timestampKick, timestampSnare, timestampHat, rhythmKick, rhythmSnare, rhythmHat, command
