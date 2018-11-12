@@ -6,6 +6,7 @@ statedepth = -1
 statestorage = []
 keyboard = Controller()
 command = ''
+s = "FUCK"
 
 def on_press(key):
     pass

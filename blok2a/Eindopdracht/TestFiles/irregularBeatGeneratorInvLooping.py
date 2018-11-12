@@ -11,7 +11,7 @@ from midiutil import MIDIFile
 from pynput.keyboard import Controller, Key, Listener
 
 ##--Objects--##
-samples = [sa.WaveObject.from_wave_file("./audioFiles/CowBell.wav"),sa.WaveObject.from_wave_file("./audioFiles/snare.wav"),sa.WaveObject.from_wave_file("./audioFiles/SecretKick.wav"),sa.WaveObject.from_wave_file("./audioFiles/RoninKick.wav"),sa.WaveObject.from_wave_file("./audioFiles/PrydaSnare.wav"),sa.WaveObject.from_wave_file("./audioFiles/Hard.wav"), sa.WaveObject.from_wave_file("./audioFiles/Hat_Closed_2.wav")]
+samples = [sa.WaveObject.from_wave_file("../audioFiles/CowBell.wav"),sa.WaveObject.from_wave_file("../audioFiles/snare.wav"),sa.WaveObject.from_wave_file("../audioFiles/SecretKick.wav"),sa.WaveObject.from_wave_file("../audioFiles/RoninKick.wav"),sa.WaveObject.from_wave_file("../audioFiles/PrydaSnare.wav"),sa.WaveObject.from_wave_file("../audioFiles/Hard.wav"), sa.WaveObject.from_wave_file("../audioFiles/Hat_Closed_2.wav")]
 bpm = 130
 tempo = 60 / bpm
 timestamps = [0]
@@ -179,6 +179,7 @@ def beatGen(count, val):                            #Generate a rhythm ready to 
 
 def player(s,stamps):                               #The same for every player only difference is the sample
     global rhythmKick,rhythmSnare,rhythmHat, command
+    numPlays = 0
     while True:
         if stamps == 0:
             lst = rhythmKick
@@ -187,6 +188,13 @@ def player(s,stamps):                               #The same for every player o
         elif stamps == 2:
             lst = rhythmHat
         if command[0] == 'play' and len(lst) > 0:
+            if len(command) >1:
+                pass
+            else:
+                if numPlays > 0:
+                    lst[0]+=0.5
+                else:
+                    pass
             startTime = time.time()                 #Updates the start time every new loop
             pos = 1                                 #Tracker for the current position in the list
             length = len(lst)                       #The length of the list
@@ -195,7 +203,7 @@ def player(s,stamps):                               #The same for every player o
                 while True:
                     currentTime = time.time()       #Update the current time for the coming equation
                     if(currentTime - startTime >= ts):
-                        if pos == length:
+                        if pos == length and len(command) > 1:
                             playObject = samples[s].play()        #Create a playObject so the last sample will be played fully
                             playObject.wait_done()
                             pos += 1
@@ -218,6 +226,7 @@ def player(s,stamps):                               #The same for every player o
                             break
                 if command[0] == 'stop' or command[0] == 'exit()':
                     break
+            numPlays+=1
         elif command[0] == 'exit()':
             break
         else:
@@ -409,6 +418,11 @@ def main():
                     command = ['stop']
                     time.sleep(1)
                     command = ['play']
+                elif state[1] == 'once':
+                    command = ['stop']
+                    time.sleep(1)
+                    command = ['play','once']
+
                 else:
                     print('Invalid argument for play, play only accepts "test" as an argument')
             state = ['main']
