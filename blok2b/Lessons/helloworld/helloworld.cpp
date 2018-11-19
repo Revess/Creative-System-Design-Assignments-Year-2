@@ -7,3 +7,9 @@ int main(){
     cin>>age;
     return 0;
 }
+
+/*
+Ui building:
+-Juice
+-Qt
+*/
