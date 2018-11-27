@@ -6,6 +6,10 @@ Instrument::Instrument(string newSound){
     sound = newSound;
 }
 
+Instrument::~Instrument(){
+    
+}
+
 void Instrument::makeSound(){
     cout<<sound<<endl;
 }
