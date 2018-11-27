@@ -8,7 +8,6 @@ Instrument::Instrument(string instrument,string sound){
 }
 
 Instrument::~Instrument(){
-
 }
 
 void Instrument::setInstrument(string instrument,string sound){

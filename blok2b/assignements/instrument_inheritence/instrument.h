@@ -12,7 +12,7 @@ class Instrument{
     //Play the sound
         void play();
 
-    private:
+    protected:
         string instrument;
         string sound;
 };
