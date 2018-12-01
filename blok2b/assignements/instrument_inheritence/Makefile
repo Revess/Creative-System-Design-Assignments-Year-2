@@ -1,5 +1,5 @@
 CXX=g++
-SOURCE=instrument.o main.o percussion.o
+SOURCE=instrument.o main.o percussion.o strings.o brass.o woodwinds.o
 
 instrument_maker: $(SOURCE)
 	$(CXX) -o $@ $(SOURCE)

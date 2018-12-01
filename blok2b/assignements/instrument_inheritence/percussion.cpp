@@ -2,7 +2,8 @@
 #include <iostream>
 using namespace std;
 
-Percussion::Percussion() : Instrument("drum", "Ba Dum Tss"){
+Percussion::Percussion() : Instrument("drum", "Ba Dum Tss","percussion"){
+    setPitchRange(36,40);
 }
 
 Percussion::~Percussion(){
