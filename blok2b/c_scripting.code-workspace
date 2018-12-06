@@ -40,7 +40,15 @@
 			"xstring": "cpp",
 			"xtr1common": "cpp",
 			"xutility": "cpp",
-			"array": "cpp"
+			"array": "cpp",
+			"algorithm": "cpp",
+			"ctime": "cpp",
+			"iomanip": "cpp",
+			"iterator": "cpp",
+			"string": "cpp",
+			"tuple": "cpp",
+			"xlocmon": "cpp",
+			"xloctime": "cpp"
 		}
 	}
 }
