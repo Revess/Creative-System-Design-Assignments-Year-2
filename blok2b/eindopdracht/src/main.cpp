@@ -1,7 +1,8 @@
 #include <iostream>
 #include <thread>
-#include "jack_module.h"
-#include "math.h"
+#include "../include/jack_module.h"
+#include "../include/synth.h"
+using namespace std;
 
 /*
  * NOTE: jack2 needs to be installed
@@ -22,17 +23,21 @@ int main(int argc,char **argv)
   jack.init("example.exe");
   double samplerate = jack.getSamplerate();
 
+  //Make new synth
+  Synth synth("simple", 500, "sine", 1, samplerate);
+  Oscillator *oscillator = &synth;
+
   //assign a function to the JackModule::onProces
-  jack.onProcess = [samplerate](jack_default_audio_sample_t *inBuf,
+  jack.onProcess = [&oscillator](jack_default_audio_sample_t *inBuf,
      jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
 
-    static double phase = 0;
     static double amplitude = 0.5;
-    static double frequency = 880;
 
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = amplitude * sin(phase * PI_2 );
-      phase += frequency / samplerate;
+      // write sine output * amplitude --> to output buffer
+      outBuf[i] = amplitude * oscillator->getSample();
+      // calculate next sample
+      oscillator->tick();
     }
 
     return 0;
@@ -49,6 +54,7 @@ int main(int argc,char **argv)
     {
       case 'q':
         running = false;
+        jack.end();
         break;
     }
   }

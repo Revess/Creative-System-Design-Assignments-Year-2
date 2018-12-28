@@ -1,0 +1,1 @@
+//When making subclass which contains the same function as the baseclass then use virtual > void.

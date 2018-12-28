@@ -1,7 +1,10 @@
 #include <iostream>
 #include <thread>
 #include "jack_module.h"
-#include "math.h"
+#include "sine.h"
+#include "saw.h"
+#include "square.h"
+#include "triangle.h"
 
 /*
  * NOTE: jack2 needs to be installed
@@ -21,18 +24,26 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init("example.exe");
   double samplerate = jack.getSamplerate();
+  double freq=500;
+
+  // create sine wave
+  Sine sine(samplerate,freq);
+  Saw saw(samplerate,freq);
+  Square square(samplerate,freq);
+  Triangle triangle(samplerate,freq);
+  Oscillator *oscillator=&sine;
 
   //assign a function to the JackModule::onProces
-  jack.onProcess = [samplerate](jack_default_audio_sample_t *inBuf,
+  jack.onProcess = [&oscillator](jack_default_audio_sample_t *inBuf,
      jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
 
-    static double phase = 0;
     static double amplitude = 0.5;
-    static double frequency = 880;
 
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = amplitude * sin(phase * PI_2 );
-      phase += frequency / samplerate;
+      // write sine output * amplitude --> to output buffer
+      outBuf[i] = amplitude * oscillator->getSample();
+      // calculate next sample
+      oscillator->tick();
     }
 
     return 0;
@@ -49,6 +60,19 @@ int main(int argc,char **argv)
     {
       case 'q':
         running = false;
+        jack.end();
+        break;
+      case '1':
+        oscillator=&sine;
+        break;
+      case '2':
+        oscillator=&saw;
+        break;
+      case '3':
+        oscillator=&square;
+        break;
+      case '4':
+        oscillator=&triangle;
         break;
     }
   }
