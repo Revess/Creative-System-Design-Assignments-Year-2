@@ -12,4 +12,13 @@ spike: I often write smaller classes or files to test technologies or ideas, and
 src: The application and only the application’s source files.
 test: All test code files. You do write tests, no?
 
+TODO:
+-Fix structure of oscillator->Synth etc. NOTWORKING!!!!!
 
+-Start on making the melody creator. Shouldn't be hard to do.
+
+-Tell people you're going home early.
+
+-The melody generator will be needing a way to get a note out of a list of notes.
+    Each note will have a pitch (and later a velocity when I fix amplitudes).
+    This note will be kinda Markovchain based where certain notes will have a chance to be followed by another note.
