@@ -8,7 +8,7 @@ class Melody{
         Melody(vector<vector<string> > &notes);
         ~Melody();
 
-        string getNote(vector<vector<string> > &notes);
+        double getNote(vector<vector<string> > &notes);
 
     private:
         //TODO: Add sharps and flats, only white keys rn
@@ -16,6 +16,4 @@ class Melody{
         string newNote;
         string prevNote;
         double frequency;
-        double startTimestamp;
-        double currentTimestamp;
 };
