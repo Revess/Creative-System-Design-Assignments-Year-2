@@ -33,14 +33,6 @@ int main(){
     Melody melody(notes);
 
     cout<<melody.getNote(notes)<<endl;
-    cout<<melody.getNote(notes)<<endl;
-    cout<<melody.getNote(notes)<<endl;
-    cout<<melody.getNote(notes)<<endl;
-    cout<<melody.getNote(notes)<<endl;
-    cout<<melody.getNote(notes)<<endl;
-    cout<<melody.getNote(notes)<<endl;
-    cout<<melody.getNote(notes)<<endl;
-
     
     return 0;
 }
