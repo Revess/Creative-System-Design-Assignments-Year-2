@@ -37,3 +37,7 @@ void FmSynth::tick(){
         oscillatorVector[i]->tick();
     }
 }
+
+int FmSynth::say_Hello(){
+    return this->hello;
+}

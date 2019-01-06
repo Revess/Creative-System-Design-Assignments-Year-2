@@ -170,7 +170,6 @@ int main(int argc,char **argv){
         synthesizer->setFrequency(frequency);
         timing = melody.getRhythm(rhythm);
         test = test + (timing/(60000/bpm));
-        cout<<test<<endl;
         Sleep(timing);
         if(test >= measure){
             jack.end();

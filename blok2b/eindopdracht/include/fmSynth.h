@@ -14,7 +14,10 @@ class FmSynth : public Synth {
 
         void tick();
 
+        int say_Hello();
+
     private:
+        int hello = 1;
         double modamount;
         double ratio;
 };

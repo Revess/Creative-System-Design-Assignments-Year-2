@@ -1,9 +1,9 @@
 settings:
-waveform: saw
+waveform: sine
 type: fm
-mod: 60
-ratio: 5
-measure: 2
+mod: 10
+ratio: 2
+measure: 4
 bpm: 120
 
 ==
