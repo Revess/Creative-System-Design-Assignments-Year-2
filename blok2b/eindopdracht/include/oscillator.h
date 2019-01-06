@@ -16,6 +16,8 @@ public:
   double getSample();
   // go to next sample
   void tick();
+  virtual void calculate();
+
   //getters and setters
   void setFrequency(double frequency);
   double getFrequency();
@@ -23,7 +25,6 @@ public:
   //NOTE - do we need a setter for phase? for now -> not using one
 
 protected:
-  virtual void calculate();
   double samplerate;
   double frequency;
   double phase;

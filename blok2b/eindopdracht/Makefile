@@ -10,7 +10,7 @@ TARGET := bin/synthsong
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -g -Ic:/Program\ Files\ \(x86\)/Jack/includes -Wall -std=c++1z
+CFLAGS := -Ic:/Program\ Files\ \(x86\)/Jack/includes -std=c++1z
 LDFLAGS= -Lc:/Program\ Files\ \(x86\)/Jack/lib -llibjack64
 #LIB := -pthread -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
 INC := -I include
@@ -29,7 +29,7 @@ clean:
 
 # Tests
 tester:
-	$(CC) $(CFLAGS) test/main.cpp test/melody.cpp $(INC) $(LDFLAGS) -o testFile
+	$(CC) $(CFLAGS) test/main.cpp $(INC) $(LDFLAGS) -o testFile
 
 # Spikes
 ticket:

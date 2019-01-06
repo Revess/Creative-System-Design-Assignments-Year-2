@@ -1,24 +1,17 @@
 #include "../include/triangle.h"
-
+using namespace std;
 
 // Constructor and destructor
-Triangle::Triangle(double samplerate, double frequency) :
-  Oscillator(samplerate, frequency)
-{
-  // TODO - use setFrequency and phase instead, to prevent outrange values
-  std::cout << "\nInside Square::oscillator (double frequency, double phase)"
-    << "\nfrequency: " << frequency
-    << "\nphase: " << phase;
+Triangle::Triangle(double samplerate, double frequency) : Oscillator(samplerate, frequency){
+    cout<<"Created a triangle"<<endl;
 }
 
-Triangle::~Triangle()
-{
-  std::cout << "\nInside Square::~Square";
+Triangle::~Triangle(){
+    cout<<"Destructed a sine"<<endl;
 }
 
 
-void Triangle::calculate()
-{
+void Triangle::calculate(){
   // calculate sample
   // NOTE: sin() method is not the most efficient way to calculate the Square value
   double tempPhase = (phase*4)-1;

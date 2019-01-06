@@ -1,44 +1,27 @@
-#ifndef _SYNTH_H_
-#define _SYNTH_H_
-#include "sine.h"
-#include "saw.h"
-#include "square.h"
-#include "triangle.h"
+#ifndef _SYNTH_
+#define _SYNTH_
+#include "oscillator.h"
+#include <vector>
 #include <string>
 using namespace std;
 
-class Synth {
+class Synth{
     public:
-    Synth(string type, double frequency, string waveform, float amplitude, double samplerate);
-    virtual ~Synth();
 
-    //Getters en Setters
-    void setEnvelope(float attack, float decay, float sustain, float release);
-    //int getEnvelope(int *array);
-    
-    void setType(string type);
-    string getType();
+        Synth(double samplerate, double frequency, string waveform, int amount);
+        virtual ~Synth();
 
-    void setFrequency(double frequency);
-    double getFrequency();
-
-    void setAmplitude(double amplitude);
-    double getAmplitude();
-    
-    void setWaveform(string waveform);
-    string getWaveform();
-
-    double getSample();
-    void tick();
+        virtual void setFrequency(double frequency);
+        void addOscillator(string waveform, int amount, double frequency);
+        virtual double getSample();
+        virtual void tick();
 
     protected:
-        virtual void calculate();
-        Oscillator *oscillator;
-        string type;
-        string waveform;
         double frequency;
-        double amplitude;
-
+        double samplerate;
+        Oscillator *oscillator;
+        vector<Oscillator*> oscillatorVector;
+        string waveform;
 };
 
 #endif

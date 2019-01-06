@@ -1,90 +1,89 @@
 #include "../include/synth.h"
+#include "sine.h"
+#include "saw.h"
+#include "square.h"
+#include "triangle.h"
+
+#include <iostream>
 #include <string>
+
 using namespace std;
 
-Synth::Synth(string type, double frequency, string waveform, float amplitude, double samplerate){
-    cout<<"Synth: "<<type<<" created"<<endl;
-    this->frequency=frequency;
-    this->type=type;
-    this->waveform=waveform;
-    this->amplitude=amplitude;
-    Sine sine(samplerate,frequency);
-    Saw saw(samplerate,frequency);
-    Square square(samplerate,frequency);
-    Triangle triangle(samplerate,frequency);
-
+Synth::Synth(double samplerate, double frequency, string waveform, int amount){
+    this->samplerate = samplerate;
+    this->frequency = frequency;
+    this->waveform = waveform;
+    cout<<"made synth with waveform: "<<waveform<<endl;
     if(waveform == "sine"){
-        oscillator = &sine;
-    } else if(waveform == "saw"){
-        oscillator = &saw;
-    } else if(waveform == "square"){
-        oscillator = &square;
-    } else if(waveform == "traingle"){
-        oscillator = &triangle;
+        for(int i = 0; i < amount; i++){
+            oscillator = new Sine(samplerate,frequency);
+            oscillatorVector.push_back(oscillator);
+        }
+    }else if(waveform == "saw"){
+        for(int i = 0; i < amount; i++){
+            oscillator = new Saw(samplerate,frequency);
+            oscillatorVector.push_back(oscillator);
+        }
+    }else if(waveform == "square"){
+        for(int i = 0; i < amount; i++){
+            oscillator = new Square(samplerate,frequency);
+            oscillatorVector.push_back(oscillator);
+        }
+    }else {
+        for(int i = 0; i < amount; i++){
+            oscillator = new Triangle(samplerate,frequency);
+            oscillatorVector.push_back(oscillator);
+        }
     }
 }
 
 Synth::~Synth(){
-    cout<<"Synth: "<<type<<"destructed"<<endl;
-}
-
-void Synth::setEnvelope(float attack, float decay, float sustain, float release){
-
-}
-
-//int getEnvelope(int *array);
-
-void Synth::setType(string type){
-    this->type = type;
-}
-
-string Synth::getType(){
-    return type;
+    for(int i = 0; i < oscillatorVector.size(); i++){
+        delete oscillatorVector[i];
+    }
 }
 
 void Synth::setFrequency(double frequency){
     this->frequency = frequency;
-    oscillator->setFrequency(frequency);
+    for(int i = 0; i < oscillatorVector.size(); i++){
+        oscillatorVector[i]->setFrequency(frequency);
+    }
 }
 
-double Synth::getFrequency(){
-    return oscillator->getFrequency();
-}
-
-void Synth::setAmplitude(double amplitude){
-    std::cout << ".";
-}
-
-double Synth::getAmplitude(){
-    return 1; 
-}
-
-void Synth::setWaveform(string waveform){
-    this->waveform = waveform;
-
-    // if(waveform == "sine"){
-    //     oscillator = &sine;
-    // } else if(waveform == "saw"){
-    //     oscillator = &saw;
-    // } else if(waveform == "square"){
-    //     oscillator = &square;
-    // } else if(waveform == "traingle"){
-    //     oscillator = &triangle;
-    // }
-}
-
-string Synth::getWaveform(){
-    return waveform;
+void Synth::addOscillator(string waveform, int amount, double frequency){
+    if(waveform == "sine"){
+        for(int i = 0; i < amount; i++){
+            oscillator = new Sine(samplerate,frequency);
+            oscillatorVector.push_back(oscillator);
+        }
+    }else if(waveform == "saw"){
+        for(int i = 0; i < amount; i++){
+            oscillator = new Saw(samplerate,frequency);
+            oscillatorVector.push_back(oscillator);
+        }
+    }else if(waveform == "square"){
+        for(int i = 0; i < amount; i++){
+            oscillator = new Square(samplerate,frequency);
+            oscillatorVector.push_back(oscillator);
+        }
+    }else {
+        for(int i = 0; i < amount; i++){
+            oscillator = new Triangle(samplerate,frequency);
+            oscillatorVector.push_back(oscillator);
+        }
+    }
 }
 
 double Synth::getSample(){
-    return oscillator->getSample();
+    double sample;
+    for(int i = 0; i < oscillatorVector.size(); i++){
+        sample = oscillatorVector[i]->getSample();
+    }
+    return sample;
 }
 
 void Synth::tick(){
-    oscillator->tick();
-}
-
-void Synth::calculate(){
-    std::cout << ".";
+    for(int i = 0; i < oscillatorVector.size(); i++){
+        oscillatorVector[i]->tick();
+    }
 }
