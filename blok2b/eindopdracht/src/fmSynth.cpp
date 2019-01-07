@@ -29,6 +29,7 @@ double FmSynth::getSample(){
 void FmSynth::tick(){
     double sample;
     sample = oscillatorVector[1]->getSample()*modamount;
+    
     this->frequency+=sample;
 
     oscillatorVector[0]->setFrequency(this->frequency);

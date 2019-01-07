@@ -134,8 +134,8 @@ int main(int argc,char **argv){
     double samplerate = jack.getSamplerate();
 
     //Make new synth
-        FmSynth fmsynth(samplerate,frequency,waveform, "sine",modulation,ratio);
-        SimpleSynth simplesynth(samplerate,frequency,waveform);
+    FmSynth fmsynth(samplerate,frequency,waveform, "sine",modulation,ratio);
+    SimpleSynth simplesynth(samplerate,frequency,waveform);
 
     Synth *synthesizer;
 

@@ -10,7 +10,7 @@ Melody::Melody(vector<vector<string> > &notes, vector<double> &rhythm, int bpm){
     //Upon starting there will be items added to the array
     srand (time(NULL));
     int randomChoise = (rand() % notes.size());
-    newNote = notes[randomChoise][(rand()%2)+1];
+    newNote = notes[randomChoise][(rand()%(notes[0].size()-1))+1];
     prevNote = newNote;
     position = randomChoise;
 
@@ -28,7 +28,7 @@ double Melody::getNote(vector<vector<string> > &notes){
     for(int i = 0; i < notes.size(); i++){
         if(notes[i][0] == prevNote){
             position = i;
-            newNote = notes[i][(rand()%2)+1];
+            newNote = notes[i][(rand()%(notes[0].size()-1))+1];
             prevNote = newNote;
 
             //convert the note to a frequency, based on midi notes;

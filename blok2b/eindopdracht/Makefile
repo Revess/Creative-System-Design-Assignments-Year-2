@@ -11,7 +11,7 @@ SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -Ic:/Program\ Files\ \(x86\)/Jack/includes -std=c++1z
-LDFLAGS= -Lc:/Program\ Files\ \(x86\)/Jack/lib -llibjack64
+LDFLAGS= -Lc:/Program\ Files\ \(x86\)/Jack/lib -llibjack
 #LIB := -pthread -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
 INC := -I include
 
