@@ -5,39 +5,43 @@
 #include <vector>
 #include <fstream>
 #include <thread>
+
 #include "../include/jack_module.h"
 #include "../include/simpleSynth.h"
 #include "../include/fmSynth.h"
 #include "../include/melody.h"
+
+//~~~~~~~~~~~~~Read the file; notes.txt first~~~~~~~~~~~~~//
 
 //Auto_execute
 //cd ..; make; cd bin; ./synthsong.exe
 
 #define PI_2 6.28318530717959
 
-using namespace std;
+using namespace std;                        //I like to use this so I don't constantly have to type std:: in front of everything. Nonetheless I know which pieces of code do need std:: for them to work.
 
 int main(int argc,char **argv){
     //Variables
     int bpm = 120;
-    double timing;
     string state;
     string layer;
     string waveform;
+    string type;
+    double timing;
     double test = 0;
     double frequency;
     double ratio;
     double modulation;
-    string type;
     int measure;
 
     //Create a JackModule instance
     JackModule jack;
 
+    //
     ifstream inFile;
-    vector<vector<string> > notes;
+    vector<vector<string> > notes;          //Initiate the 2D vector.
     vector<double> rhythm;
-    vector<string> temporary;
+    vector<string> temporary;               //To store temporary data that will be read from the markov.txt file
     string note;
 
     //Reading the user input file

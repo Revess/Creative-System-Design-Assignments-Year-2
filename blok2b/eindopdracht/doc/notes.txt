@@ -12,13 +12,33 @@ spike: I often write smaller classes or files to test technologies or ideas, and
 src: The application and only the application’s source files.
 test: All test code files. You do write tests, no?
 
-TODO:
--Fix structure of oscillator->Synth etc. NOTWORKING!!!!!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--Start on making the melody creator. Shouldn't be hard to do.
+How To use the program:
+In /docs there is a .txt file called markov.txt this is where the user input will go.
+The syntax of the program is as follows:
+-Use "settings:" to change the settings of the synthesizer, then underneith you can change the following settings:
+    -"waveform:" Waveform uses the arguments: "sine", "saw", "square", "triangle". Use this to set the base waveform.
+    -"type:" Type sets the type of synthesizer, arguments are: "simple", "fm".
+    -"mod:" Sets the amount of modulation. Arguments is whole number.
+    -"ratio:" Sets the ratio of the modulator oscillator in the case of fm. Takes a floating point number as an argument.
+    -"measure:" Sets the length of the melody that will be generated.
+    -"bpm:" Sets the bpm of the song. Takes a whole number as argument.
 
--Tell people you're going home early.
+-Then to switch to the next type of settings for the program use "==".
+-Use "melody:" to edit the markovchain that the program will use:
+    -The markovchain is made up of a 2D array, each new line represents a new piece to the chain. Each new line is defined by the "//" at the end of the line.
+    -The first note you use as an input will be seen as the start, then the following notes will be read as the notes that can follow up on that note.
+    -When done with a line add "`[number]" to add a notelength to the note.
+    -Each note must contain the following: A note displayed as a character on the notes schale (sharps and flats not yet implemented), for example: MIDI 60 is a c so you type a c to display that note.
+     Then for the ocatve you type the number of the octave that the note should be played as, we use base 0 as the lowest octave possible.
+     For example: c4 is MIDI-note number 60.
 
--The melody generator will be needing a way to get a note out of a list of notes.
-    Each note will have a pitch (and later a velocity when I fix amplitudes).
-    This note will be kinda Markovchain based where certain notes will have a chance to be followed by another note.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+80% of the code is written by myself, I took some inpiration (and copied) from my teacher Ciska Vriezenga:
+https://github.com/ciskavriezenga/cppExampleshttps://github.com/ciskavriezenga/cppExamples
+
+In the comments the copied code will be marked as such: ~~CC~~
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
