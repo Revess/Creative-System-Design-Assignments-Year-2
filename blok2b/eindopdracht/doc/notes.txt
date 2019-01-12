@@ -39,6 +39,7 @@ The syntax of the program is as follows:
 80% of the code is written by myself, I took some inpiration (and copied) from my teacher Ciska Vriezenga:
 https://github.com/ciskavriezenga/cppExampleshttps://github.com/ciskavriezenga/cppExamples
 
-In the comments the copied code will be marked as such: ~~CC~~
+In the comments the copied code will be marked as such: ~~CC~~, 
+and the end of the codeblock that is copied will be marked as such: ||CC||
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

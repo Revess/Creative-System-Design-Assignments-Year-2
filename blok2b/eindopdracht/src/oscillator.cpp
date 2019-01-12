@@ -1,6 +1,8 @@
 #include "../include/oscillator.h"
 using namespace std;
 
+//~~CC~~
+
 // Constructor and destructor
 Oscillator::Oscillator(double samplerate, double frequency) :
     samplerate(samplerate), frequency(frequency), phase(0), sample(0){
@@ -38,3 +40,5 @@ void Oscillator::setFrequency(double frequency){
 double Oscillator::getFrequency(){
     return frequency;
 }
+
+//||CC||

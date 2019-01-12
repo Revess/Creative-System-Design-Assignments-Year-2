@@ -23,10 +23,11 @@ Melody::Melody(vector<vector<string> > &notes, vector<double> &rhythm, int bpm){
 Melody::~Melody(){
 }
 
+//Return the note that need to be played in a frequency.
 double Melody::getNote(vector<vector<string> > &notes){
     //Gets a random note from the list based on the previous one, uses a random number to pick one or the other.
     for(int i = 0; i < notes.size(); i++){
-        if(notes[i][0] == prevNote){
+        if(notes[i][0] == prevNote){            //Check if note is in the list at all
             position = i;
             newNote = notes[i][(rand()%(notes[0].size()-1))+1];
             prevNote = newNote;
@@ -44,6 +45,7 @@ double Melody::getNote(vector<vector<string> > &notes){
     return 2;
 }
 
+//Return the Rhythm based on the position of the melody array
 double Melody::getRhythm(vector<double> &rhythm){
     //Give back the next rhythm value of the chain
     newRhythm = rhythm[position];

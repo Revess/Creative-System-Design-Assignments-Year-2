@@ -3,6 +3,8 @@
 #include "synth.h"
 using namespace std;
 
+//See .cpp file for the explenation
+
 class FmSynth : public Synth {
     public:
         FmSynth(double samplerate, double frequency, string waveform1, string waveform2, double modamount, double ratio);

@@ -9,6 +9,7 @@
 
 using namespace std;
 
+//Create an instance of a synthesizer with just one oscillator and whatever waveform the user wants and the program allows
 Synth::Synth(double samplerate, double frequency, string waveform, int amount){
     this->samplerate = samplerate;
     this->frequency = frequency;
@@ -38,11 +39,12 @@ Synth::Synth(double samplerate, double frequency, string waveform, int amount){
 }
 
 Synth::~Synth(){
-    for(int i = 0; i < oscillatorVector.size(); i++){
+    for(int i = 0; i < oscillatorVector.size(); i++){       //Also delete each oscillator
         delete oscillatorVector[i];
     }
 }
 
+//Change the frequency of every oscillator
 void Synth::setFrequency(double frequency){
     this->frequency = frequency;
     for(int i = 0; i < oscillatorVector.size(); i++){
@@ -50,6 +52,7 @@ void Synth::setFrequency(double frequency){
     }
 }
 
+//Add an oscillator with a custom waveform
 void Synth::addOscillator(string waveform, int amount, double frequency){
     if(waveform == "sine"){
         for(int i = 0; i < amount; i++){
@@ -74,6 +77,8 @@ void Synth::addOscillator(string waveform, int amount, double frequency){
     }
 }
 
+//Get the sample from every oscillator
+//TODO: Make sure it returns every oscillator, it only returns the last one right now.
 double Synth::getSample(){
     double sample;
     for(int i = 0; i < oscillatorVector.size(); i++){
@@ -82,6 +87,7 @@ double Synth::getSample(){
     return sample;
 }
 
+//Set the tick from every oscillator.
 void Synth::tick(){
     for(int i = 0; i < oscillatorVector.size(); i++){
         oscillatorVector[i]->tick();

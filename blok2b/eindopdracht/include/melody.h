@@ -3,6 +3,8 @@
 #include <array>
 using namespace std;
 
+//See .cpp file for the explenation
+
 class Melody{
     public:
         Melody(vector<vector<string> > &notes, vector<double> &rhythm, int bpm);

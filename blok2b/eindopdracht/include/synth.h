@@ -5,6 +5,8 @@
 #include <string>
 using namespace std;
 
+//See .cpp file for the explenation
+
 class Synth{
     public:
 

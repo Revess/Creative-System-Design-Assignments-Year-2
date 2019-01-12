@@ -28,7 +28,7 @@ int main(int argc,char **argv){
     string waveform;
     string type;
     double timing;
-    double test = 0;
+    double endOfLoop = 0;
     double frequency;
     double ratio;
     double modulation;
@@ -47,12 +47,11 @@ int main(int argc,char **argv){
     //Reading the user input file
     inFile.open("../doc/markov.txt");
     if(!inFile){
-        cout<<"Unable to open file"<<endl;
+        cout<<"Unable to open file"<<endl;  //If the file is not in the correct place display this error
         exit(1);
     }
-    //Fill a vector with the input of the user, the vector is a 2d vector with the markovchain rules
     while(inFile >> note){
-        if(note == "=="){
+        if(note == "=="){                   //A small statemachine that will flip and switch when reading out the markov.txt file. This makes sure all the settings will be in the right place
             layer = "";
         } else if(note == "settings:" || layer == "settings:"){
             if(layer == "settings:"){
@@ -102,19 +101,19 @@ int main(int argc,char **argv){
             } else {
                 layer = note;
             }
-        } else if(note == "melody:" || layer == "melody:"){
+        } else if(note == "melody:" || layer == "melody:"){     //Fill a vector with the input of the user, the vector is a 2d vector with the markovchain rules
             if(layer == "melody:"){
-                if(note == "//"){
-                    notes.push_back(temporary);
+                if(note == "//"){                               //The check to see if the end of one layer of Markov is reached, if so then
+                    notes.push_back(temporary);                 //Push the temporary array to the 2D array and clear it.
                     temporary.clear();
-                } else if(note[0] == '`'){
+                } else if(note[0] == '`'){                      //Store the notelengths.
                     note.erase(note.begin());
                     if(stod(note) < 0.25 || stod(note) > 4){
                         cout<<"Note length too long, choose: 0.25 | 0.5 | 1 | 2 | 4 |"<<endl<<"Error at rhythm: "<<note<<endl;
                         exit(1);
                     }
                     rhythm.push_back(stod(note));
-                } else if(note.size() <= 2) {
+                } else if(note.size() <= 2) {                   //Check if the input is indeed a note and an octave next to eachother then push the notes to the 1D temporary array.
                     temporary.push_back(note);
                 }
             } else {
@@ -126,8 +125,8 @@ int main(int argc,char **argv){
 
     //Initiate the melody calculator
     Melody melody(notes,rhythm,bpm);
-    frequency = melody.getNote(notes);
-    timing = melody.getRhythm(rhythm);
+    frequency = melody.getNote(notes);      //Set the first frequency for the oscillator.
+    timing = melody.getRhythm(rhythm);      //Set the first time of delay.
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~
 //~~~~~~~~~~~JACK~~~~~~~~~~~
@@ -137,19 +136,20 @@ int main(int argc,char **argv){
     jack.init("example.exe");
     double samplerate = jack.getSamplerate();
 
-    //Make new synth
+    //Make new simple and fm synth
     FmSynth fmsynth(samplerate,frequency,waveform, "sine",modulation,ratio);
     SimpleSynth simplesynth(samplerate,frequency,waveform);
 
-    Synth *synthesizer;
+    Synth *synthesizer;     //To easily pick a synthesizer use a pointer.
 
-    if(type == "fm"){
+    if(type == "fm"){       //Type is written in the markov.txt file and is checked here, otherwise it defaults to a simple synth
         synthesizer = &fmsynth;
     } else{
         synthesizer = &simplesynth;
     }
 
     //assign a function to the JackModule::onProces
+    //~~CC~~
     jack.onProcess = [&synthesizer](jack_default_audio_sample_t *inBuf,
         jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
             static double amplitude = 0.5;
@@ -163,6 +163,7 @@ int main(int argc,char **argv){
     };
 
     jack.autoConnect();
+    //||CC||
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //~~~~~~~~~~~MELODY~~~~~~~~~~~
@@ -170,14 +171,15 @@ int main(int argc,char **argv){
 
     //Start of notes loop
     while(true){
-        frequency = melody.getNote(notes);
-        synthesizer->setFrequency(frequency);
-        timing = melody.getRhythm(rhythm);
-        test = test + (timing/(60000/bpm));
+        frequency = melody.getNote(notes);      //Get the next frequency for the oscillator.
+        synthesizer->setFrequency(frequency);   //Set the frequency of the synthesizer.
+        timing = melody.getRhythm(rhythm);      //Set the timing of the sleeper function. The reason I used the sleeper function instead
+                                                //of timestamps is becaus the compiler didn't completely get how to use timestamps.
+        endOfLoop = endOfLoop + (timing/(60000/bpm));     //Add the timings to the loop value that determains if we are at the end of the song.
         Sleep(timing);
-        if(test >= measure){
-            jack.end();
-            break;
+        if(endOfLoop >= measure){
+            jack.end();                         //Disconnect Jack correctly
+            break;                              //End loop
         }
     }
     

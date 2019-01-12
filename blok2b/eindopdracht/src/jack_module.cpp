@@ -5,6 +5,8 @@
 #
 */
 
+//~~CC~~
+
 #include <iostream>
 #include <mutex>
 #include <unistd.h> // usleep
@@ -153,3 +155,5 @@ static void jack_shutdown(void *arg)
 {
   exit(1);
 } // jack_shutdown()
+
+//||CC||
