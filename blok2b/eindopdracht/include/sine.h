@@ -4,8 +4,8 @@
 
 #define PI_2 6.28318530717959
 
-
-class Sine : public Oscillator {
+class Sine : public Oscillator
+{
 public:
   //Constructor and destructor
   Sine(double samplerate, double frequency);
@@ -13,7 +13,6 @@ public:
 
   // ovverride calculate method
   void calculate();
-
 };
 
 #endif
