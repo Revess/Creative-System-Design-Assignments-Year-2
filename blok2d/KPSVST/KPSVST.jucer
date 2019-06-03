@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="as2duW" name="KPSVST" projectType="audioplug" jucerVersion="5.4.3"
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              companyWebsite="basmaat.com" companyName="Bas Maat" companyEmail="info@basmaat.com"
+              companyCopyright="CC" pluginName="Electric Bass" pluginDesc="A synthesized electric bass guitar based on a Karplus strong model">
+  <MAINGROUP id="tl4MjG" name="KPSVST">
+    <GROUP id="{3C5ED4E1-02A6-ED27-1458-2E951F664197}" name="Source">
+      <FILE id="O1aZcm" name="attackEnveloper.cpp" compile="1" resource="0"
+            file="Builds/VisualStudio2019/attackEnveloper.cpp"/>
+      <FILE id="AzcBhK" name="attackEnveloper.h" compile="0" resource="0"
+            file="Builds/VisualStudio2019/attackEnveloper.h"/>
+      <FILE id="c2xgld" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="sM9FEN" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="HqhW2d" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="KIzarl" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="wZVhcT" name="delayLine.cpp" compile="1" resource="0" file="Builds/VisualStudio2019/delayLine.cpp"/>
+      <FILE id="aIx6Kv" name="delayLine.h" compile="0" resource="0" file="Builds/VisualStudio2019/delayLine.h"/>
+      <FILE id="C1fb4c" name="KPS.cpp" compile="1" resource="0" file="Builds/VisualStudio2019/KPS.cpp"/>
+      <FILE id="VF7cps" name="KPS.h" compile="0" resource="0" file="Builds/VisualStudio2019/KPS.h"/>
+      <FILE id="dtuCzK" name="noise.cpp" compile="1" resource="0" file="Builds/VisualStudio2019/noise.cpp"/>
+      <FILE id="wv2Dbd" name="noise.h" compile="0" resource="0" file="Builds/VisualStudio2019/noise.h"/>
+      <FILE id="MckkBh" name="voiceHandler.cpp" compile="1" resource="0"
+            file="Builds/VisualStudio2019/voiceHandler.cpp"/>
+      <FILE id="Sx9MOV" name="voiceHandler.h" compile="0" resource="0" file="Builds/VisualStudio2019/voiceHandler.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2019 targetFolder="Builds/VisualStudio2019">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" linkTimeOptimisation="1"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Electric Bass"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="C:/Program Files/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2019>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <WINDOWS buildEnabled="0" continuousRebuildEnabled="0" headerPath="https://unix.superglobalmegacorp.com/Net2/newsrc/sys/cdefs.h.html"/>
+  </LIVE_SETTINGS>
+  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+</JUCERPROJECT>
