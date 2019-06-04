@@ -1,22 +1,10 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin editor.
-
-  ==============================================================================
-*/
-
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 
 //==============================================================================
-/**
-*/
-class KpsvstAudioProcessorEditor : 
+class KpsvstAudioProcessorEditor :
 	public AudioProcessorEditor,
 	private MidiInputCallback,
 	private MidiKeyboardStateListener,
@@ -24,13 +12,13 @@ class KpsvstAudioProcessorEditor :
 	public ComboBox::Listener
 {
 public:
-    KpsvstAudioProcessorEditor (KpsvstAudioProcessor&);
-    ~KpsvstAudioProcessorEditor();
+	KpsvstAudioProcessorEditor(KpsvstAudioProcessor&);
+	~KpsvstAudioProcessorEditor();
 
-    //==============================================================================
-    void paint (Graphics&) override;
-    void resized() override;
-	void sliderValueChanged (Slider* slider) override;
+	//==============================================================================
+	void paint(Graphics&) override;
+	void resized() override;
+	void sliderValueChanged(Slider* slider) override;
 	void comboBoxChanged(ComboBox* comboBox) override;
 
 	//==============================================================================
@@ -38,10 +26,11 @@ public:
 	MidiKeyboardComponent kSlider;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    KpsvstAudioProcessor& processor;
-	Rectangle<int> windowSize = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
+	//==============================================================================
+	//Reference the Pocessor
+	KpsvstAudioProcessor& processor;
+	//==============================================================================
+	//Dials
 	Slider pitchDialE;
 	Slider pitchDialA;
 	Slider pitchDialD;
@@ -49,6 +38,8 @@ private:
 	Slider gainDial;
 	Slider freqDial;
 	Slider resDial;
+	//==============================================================================
+	//Lables
 	Label freqLabel;
 	Label resLabel;
 	Label gainLabel;
@@ -57,15 +48,20 @@ private:
 	Label dLabel;
 	Label gLabel;
 	Label controlText;
+	//==============================================================================
+	//Noise menu settings
 	ComboBox noise;
-
+	const int dialWidth = 100;
 	const int numNoiseTypes = 4;
-	string noiseTypes[4] = {"white","pink","brown","gaussian"};
+	string noiseTypes[4] = { "white","pink","brown","gaussian" };
+
+	//==============================================================================
+	//Other midi Handling
 	bool isAddingFromMidiInput = false;
 
 	void handleIncomingMidiMessage(MidiInput* source, const MidiMessage& message) override;
 	void handleNoteOn(MidiKeyboardState*, int midiChannel, int midiNoteNumber, float velocity) override;
 	void handleNoteOff(MidiKeyboardState*, int midiChannel, int midiNoteNumber, float /*velocity*/) override;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KpsvstAudioProcessorEditor)
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(KpsvstAudioProcessorEditor)
 };
