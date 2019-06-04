@@ -6,6 +6,8 @@ VoiceHandler::VoiceHandler() {
 VoiceHandler::~VoiceHandler() {
 }
 
+//==============================================================================
+//Send the sample to the caller and apply the right calculation to the sample to be given
 double VoiceHandler::readSample() {
 	outputSample = 0;
 	for (int i = 0; i < numVoices; i++) {
@@ -14,6 +16,8 @@ double VoiceHandler::readSample() {
 	return outputSample;
 }
 
+//==============================================================================
+//Change the note of the corresponding string
 void VoiceHandler::setNote(int midiNote) {
 	if (midiNote >= ePitch && midiNote < ePitch + 12) {
 		kpsVoices[0].setNote(midiNote + (ePitch-(int)ePitch));
@@ -27,6 +31,9 @@ void VoiceHandler::setNote(int midiNote) {
 	updateActive();
 }
 
+//==============================================================================
+//If the note has been released send an message to notice that the string is lose
+//TODO: Implement this
 void VoiceHandler::releaseNote(int midiNote) {
 	if (midiNote >= ePitch && midiNote < ePitch+12) {
 		eBusy = false;
@@ -42,6 +49,8 @@ void VoiceHandler::releaseNote(int midiNote) {
 	}
 }
 
+//==============================================================================
+//Basically a second constructor that is called to prepare the syntheziser for playback, any time the samplerate changes etc.
 void VoiceHandler::prepareToPlay(double samplerate, int samplesPerBlock, int numChannels, int filterCutoff){
 	this->sampleRate = samplerate;
 	this->samplesPerBlok = samplesPerBlock;
@@ -53,6 +62,8 @@ void VoiceHandler::prepareToPlay(double samplerate, int samplesPerBlock, int num
 	}
 }
 
+//==============================================================================
+//Change the filter cutoff frequency for each seperate string
 void VoiceHandler::updateFilterFreq(double frequency) {
 	double offset = 0;
 	for (int i = 0; i < numVoices; i++) {
@@ -61,12 +72,16 @@ void VoiceHandler::updateFilterFreq(double frequency) {
 	}
 }
 
+//==============================================================================
+//Change the Q factor of the filter for each sperate string
 void VoiceHandler::updateFilterRes(double res) {
 	for (int i = 0; i < numVoices; i++) {
 		kpsVoices[i].updateFilterRes(res);
 	}
 }
 
+//==============================================================================
+//Update the number of active voices at one time, this to normalize the audio of the output
 void VoiceHandler::updateActive() {
 	numActiveVoices = 1.0;
 	for (int i = 0; i < numVoices; i++) {
@@ -76,12 +91,16 @@ void VoiceHandler::updateActive() {
 	}
 }
 
+//==============================================================================
+//Change the type of noise for each string
 void VoiceHandler::updateNoiseType(int noise) {
 	for (int i = 0; i < numVoices; i++) {
 		kpsVoices[i].updateNoiseType(noise);
 	}
 }
 
+//==============================================================================
+//Change the pitchoffset for each string
 void VoiceHandler::updatePitch(float pitch, int string) {
 	if (string == 0) {
 		ePitch = pitch;
