@@ -12,7 +12,7 @@ public:
 	void reset();
 
 private:
-	double multiStack = 0.0;
+	double multiStack = 0.0; //The incrementel stepchange of the multiplier, the slope of the graph
 	double multiplier = 1.0;
 };
 

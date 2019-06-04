@@ -5,7 +5,8 @@
 
 using namespace std;
 
-enum noiseType { gaussian, white, pink, brown, blue, violet, grey };
+//The different type of noise choises
+enum noiseType { gaussian, white, pink, brown, blue, violet };
 
 class Noise
 {
@@ -19,10 +20,13 @@ public:
 
 private:
 	//=====================================================================
-	//RandomNess
+	//Random functions
 	noiseType noise_t = white;
+	//Generator
 	default_random_engine generator;
+	//The Gaussian distribution
 	normal_distribution<double> distribution{ 0.0, 0.3 };
+	//The other noise types
 	uniform_real_distribution<double> dist{ -1.0, 1.0 };
 	
 	//=====================================================================

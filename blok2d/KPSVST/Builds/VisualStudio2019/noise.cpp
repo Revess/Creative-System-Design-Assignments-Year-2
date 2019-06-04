@@ -2,8 +2,10 @@
 using namespace std;
 
 Noise::Noise(noiseType noise_t){
+	//Set Noise type
 	this->noise_t = noise_t;
 
+	//Set the filter settings & prepare the filters
 	coefficientsptr = new dsp::IIR::Coefficients<double>;
 	lpfptr = new struct dsp::IIR::Filter<double>::Filter(coefficientsptr->makeFirstOrderLowPass(44100, 100));
 	lpfptr2 = new struct dsp::IIR::Filter<double>::Filter(coefficientsptr->makeFirstOrderLowPass(44100, 100));
@@ -28,6 +30,7 @@ Noise::Noise(noiseType noise_t){
 
 Noise::~Noise() {}
 
+//Process a sample for the caller
 double Noise::getSample() {
 	if (noise_t == white) {
 		return generate();
@@ -44,11 +47,12 @@ double Noise::getSample() {
 	}
 }
 
+//Generate a random value
 double Noise::generate() {
-	double samlr = dist(generator);
-	return samlr;
+	return dist(generator);
 }
 
+//Change the type of Noise to be generated
 void Noise::setNoiseType(int noise) {
 	if (noise == 0) {
 		noise_t = white;
