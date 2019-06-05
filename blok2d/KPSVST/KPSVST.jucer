@@ -3,7 +3,8 @@
 <JUCERPROJECT id="as2duW" name="KPSVST" projectType="audioplug" jucerVersion="5.4.3"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               companyWebsite="basmaat.com" companyName="Bas Maat" companyEmail="info@basmaat.com"
-              companyCopyright="CC" pluginName="Electric Bass" pluginDesc="A synthesized electric bass guitar based on a Karplus strong model">
+              companyCopyright="CC" pluginName="Electric Bass" pluginDesc="A synthesized electric bass guitar based on a Karplus strong model"
+              pluginFormats="buildStandalone,buildVST,buildVST3">
   <MAINGROUP id="tl4MjG" name="KPSVST">
     <GROUP id="{3C5ED4E1-02A6-ED27-1458-2E951F664197}" name="Source">
       <FILE id="O1aZcm" name="attackEnveloper.cpp" compile="1" resource="0"
@@ -31,8 +32,8 @@
   <EXPORTFORMATS>
     <VS2019 targetFolder="Builds/VisualStudio2019">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" linkTimeOptimisation="1"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="Electric Bass"/>
+        <CONFIGURATION isDebug="1" name="Debug" linkTimeOptimisation="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="C:/Program Files/JUCE/modules"/>
